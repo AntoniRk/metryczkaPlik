@@ -11,9 +11,10 @@ Author: Antoni Roskosz
 define( 'LOKALIZACJA_WTYCZKI', plugin_dir_path( __FILE__ ) );
 
 // Załącz pozostałe pliki z funkcjami
-include_once LOKALIZACJA_WTYCZKI . 'includes/metryczkaMedia.php';
-include_once LOKALIZACJA_WTYCZKI . 'includes/metryczkaFormatowanie.php';
-include_once LOKALIZACJA_WTYCZKI . 'includes/metryczkaAdmin.php';
+require_once LOKALIZACJA_WTYCZKI . 'includes/metryczkaMedia.php';
+require_once LOKALIZACJA_WTYCZKI . 'includes/metryczkaFormatowanie.php';
+require_once LOKALIZACJA_WTYCZKI . 'includes/metryczkaWyglad.php';
+require_once LOKALIZACJA_WTYCZKI . 'includes/metryczkaAdmin.php';
 
 if (!defined('ABSPATH')) die();
 
