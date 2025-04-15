@@ -1,8 +1,8 @@
 <?php
 
 /*
-Plugin Name: Metryczki dla PDF
-Description: Automatycznie wykrywa linki do <strong>PDF</strong> i dodaje przycisk do wyświetlania ich <strong>metryczek</strong>. Nowe dane przy dodawaniu plików i edycji. 
+Plugin Name: Metryczki dla załączników
+Description: Automatycznie wykrywa linki do <strong>załączników</strong> i dodaje przycisk do wyświetlania ich <strong>metryczek</strong>. Nowe dane przy dodawaniu plików i edycji. 
 Version: 0.37
 Author: Antoni Roskosz
 */

@@ -4,8 +4,8 @@
 function pdf_metryczka_menu()
 {
     add_options_page(
-        'Ustawienia Metryczki PDF',
-        'Metryczki PDF',
+        'Ustawienia Metryczek załączników',
+        'Metryczki załączników',
         'manage_options',
         'pdf-metryczka-settings',
         'pdf_metryczka_settings_page'
@@ -24,7 +24,7 @@ function pdf_metryczka_add_help_tab()
     $screen->add_help_tab(array(
         'id'      => 'pdf_metryczka_help_url_prefix',
         'title'   => 'Prefix URL',
-        'content' => '<p><strong>Prefix URL</strong> - Ta opcja pozwala określić prefix, który będzie dodawany do względnych adresów URL plików PDF (np. zaczynających się od "/"). Jest to szczególnie przydatne w środowiskach, gdzie ścieżki względne wymagają dodatkowego prefiksu, aby być poprawnie rozpoznawane przez system WordPress.</p>
+        'content' => '<p><strong>Prefix URL</strong> - Ta opcja pozwala określić prefix, który będzie dodawany do względnych adresów URL plików (np. zaczynających się od "/"). Jest to szczególnie przydatne w środowiskach, gdzie ścieżki względne wymagają dodatkowego prefiksu, aby być poprawnie rozpoznawane przez system WordPress.</p>
                      <p>Domyślna wartość to <code>https://bip.polsl.pl</code>, ale możesz ją zmienić zgodnie z konfiguracją swojej witryny.</p>
                      <p>Przykład: Jeśli masz link do pliku <code>/wp-content/uploads/2023/01/dokument.pdf</code>, wtyczka automatycznie przekształci go na <code>https://bip.polsl.pl/wp-content/uploads/2023/01/dokument.pdf</code> podczas próby identyfikacji załącznika.</p>'
     ));
@@ -147,7 +147,7 @@ function pdf_metryczka_settings_page()
     wp_enqueue_style('font-awesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css');
 ?>
     <div class="wrap">
-        <h1>Ustawienia Metryczki PDF</h1>
+        <h1>Ustawienia Metryczek załączników</h1>
 
         <form method="post" action="options.php">
             <?php settings_fields('pdf_metryczka_options_group'); ?>
@@ -162,22 +162,21 @@ function pdf_metryczka_settings_page()
             <div id="general-settings" class="tab-content" style="display:block;">
                 <table class="form-table">
                     <tr valign="top">
-                        <th scope="row">Automatyczne wykrywanie PDF</th>
+                        <th scope="row">Automatyczne wykrywanie załączników</th>
                         <td>
                             <label>
                                 <input type="checkbox" name="pdf_metryczka_options[enable_auto_detection]" value="1" <?php checked(1, $options['enable_auto_detection']); ?> />
-                                Włącz automatyczne wykrywanie linków PDF na stronach
+                                Włącz automatyczne wykrywanie linków z załącznikami na stronach
                             </label>
                         </td>
                     </tr>
                     <tr valign="top">
-                        <th scope="row">Rozszerzone wykrywanie PDF</th>
+                        <th scope="row">Rozszerzone wykrywanie załączników</th>
                         <td>
                             <label>
                                 <input type="checkbox" name="pdf_metryczka_options[enable_extended_detection]" value="1" <?php checked(1, $options['enable_extended_detection'] ?? 0); ?> />
-                                Wykrywaj pliki PDF również po atrybutach download, type oraz kontekście
+                                Wykrywaj pliki również po atrybutach download, type oraz kontekście
                             </label>
-                            <p class="description">Włącz tę opcję, aby wykrywać pliki PDF również wtedy, gdy link nie kończy się na .pdf</p>
                         </td>
                     </tr>
                     <tr valign="top">
@@ -185,7 +184,7 @@ function pdf_metryczka_settings_page()
                         <td>
                             <label>
                                 <input type="checkbox" name="pdf_metryczka_options[display_icon]" value="1" <?php checked(1, $options['display_icon']); ?> />
-                                Pokaż ikonę metryczki obok linków PDF
+                                Pokaż ikonę metryczki obok linków do plików
                             </label>
                         </td>
                     </tr>
@@ -363,7 +362,7 @@ function pdf_metryczka_settings_page()
                 // Ogranicz do 5 najczęściej pobieranych
                 $top_downloads = array_slice($pdf_attachments, 0, 5);
                 ?>
-                <p>Liczba zindeksowanych plików PDF: <strong><?php echo intval($count); ?></strong></p>
+                <p>Liczba zindeksowanych plików: <strong><?php echo intval($count); ?></strong></p>
 
                 <?php if (!empty($top_downloads)): ?>
                     <h3>Najczęściej pobierane pliki:</h3>
