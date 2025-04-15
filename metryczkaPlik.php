@@ -183,7 +183,6 @@ function check_pdf_links()
             // Dodaj zmienną globalną z opcją rozszerzonego wykrywania
             var enableExtendedDetection = <?php echo isset($options['enable_extended_detection']) && $options['enable_extended_detection'] ? 'true' : 'false'; ?>;
 
-            // Zmodyfikuj kod wykrywania linków PDF
             document.addEventListener('DOMContentLoaded', function() {
                 const $ = jQuery;
 
