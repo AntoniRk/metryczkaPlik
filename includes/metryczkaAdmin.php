@@ -250,7 +250,7 @@ function pdf_metryczka_settings_page()
                                         <h5 class="modal-title" id="pdfTitle">
                                             <a href="<?php echo $sample_pdf_url; ?>" target="_blank"><?php echo $sample_pdf_title; ?></a>
                                         </h5>
-                                    <!-- </div> -->
+                                    </div>
                                     <div class="modal-body" id="pdfDetails">
                                         <table class="table">
                                             <tr>
