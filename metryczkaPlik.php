@@ -421,7 +421,7 @@ function check_pdf_links()
                                 }, function(data) {
                                     if (!data) {
                                         metadataContainer.innerHTML = `
-                                            <div style="padding: 10px; background-color: #fff3cd; border: 1px solid #ffeeba; border-radius: 4px; margin-bottom: 10px;">
+                                            <div>
                                                 <strong>Uwaga:</strong> Nie znaleziono metadanych dla tego dokumentu.
                                             </div>
                                         `;
@@ -462,7 +462,7 @@ function check_pdf_links()
                                 }).fail(function(jqXHR, textStatus, errorThrown) {
                                     console.error('Błąd AJAX:', textStatus, errorThrown);
                                     metadataContainer.innerHTML = `
-                                        <div style="padding: 10px; background-color: #f8d7da; border: 1px solid #f5c6cb; border-radius: 4px; margin-bottom: 10px;">
+                                        <div>
                                             <strong>Błąd:</strong> Nie udało się pobrać metadanych dokumentu.
                                             <p>Szczegóły: ${textStatus} - ${errorThrown || 'Nieznany błąd'}</p>
                                         </div>

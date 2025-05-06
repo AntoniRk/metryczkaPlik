@@ -32,6 +32,10 @@ function pdf_metryczka_default_options()
     margin: auto !important;
 }
 
+.modal-content>*{
+   padding: 10px !important;
+}
+
 .modal-header,.modal-footer{
    border: none !important;
 }
@@ -80,6 +84,12 @@ function pdf_metryczka_default_options()
 
 #pdfDetails table td:nth-child(4n) {
     white-space: nowrap !important;
+}
+
+@media (max-width: 420px) {
+    #pdfDetails table td:nth-child(4n) {
+        white-space: normal;
+    }
 }
 
 @media (max-width: 600px) {
