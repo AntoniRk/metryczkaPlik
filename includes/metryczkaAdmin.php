@@ -228,8 +228,8 @@ function pdf_metryczka_settings_page()
                             <button type="button" class="button reset-css" data-target="button_css" data-type="textarea" style="width: 100%">Resetuj</button>
                             <p class="description">CSS do dostosowania wyglądu przycisku metryczki</p>
                         </td>
-                        <td colspan="2" style="display: flexbox;">
-                            <div id="button-preview" style="flex-basis: 100%;">
+                        <td colspan="2">
+                            <div class="pdf-container">
                                 <span class="pdf-link" style="cursor:pointer; font-size: 1rem !important;" data-url="<?php echo $sample_pdf_url; ?>">
                                     <span class="pdf-link-text"><?php echo $sample_pdf_title; ?></span>
                                     <i class="fa-solid fa-info-circle"></i>
@@ -244,15 +244,15 @@ function pdf_metryczka_settings_page()
                             <p class="description">CSS do dostosowania wyglądu okna modalnego metryczki</p>
                         </td>
                         <td colspan="2">
-                            <div id="modal-preview" style="border: 1px solid #ddd; border-radius: 5px; overflow: hidden; margin-bottom: 20px;">
+                            <div id="modal-preview">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="pdfTitle" style="font-size: 1rem;">
+                                        <h5 class="modal-title" id="pdfTitle">
                                             <a href="<?php echo $sample_pdf_url; ?>" target="_blank"><?php echo $sample_pdf_title; ?></a>
                                         </h5>
                                     </div>
                                     <div class="modal-body" id="pdfDetails">
-                                        <table class="table table-bordered table-hover">
+                                        <table class="table">
                                             <tr>
                                                 <td>Wytworzył:</td>
                                                 <td>Jan Kowalski</td>
@@ -267,7 +267,7 @@ function pdf_metryczka_settings_page()
                                             </tr>
                                             <tr>
                                                 <td>Data publikacji:</td>
-                                                <td>05-01-2023</td>
+                                                <td>05-01-2023 19:30</td>
                                             </tr>
                                             <tr>
                                                 <td>Zaktualizował:</td>
@@ -275,7 +275,7 @@ function pdf_metryczka_settings_page()
                                             </tr>
                                             <tr>
                                                 <td>Data aktualizacji:</td>
-                                                <td>15-01-2023</td>
+                                                <td>15-01-2023 07:15</td>
                                             </tr>
                                             <tr>
                                                 <td>Liczba pobrań:</td>
@@ -300,7 +300,7 @@ function pdf_metryczka_settings_page()
                         <td colspan="2">
                             <div id="table-preview">
                                 <div class="mn-document-download">
-                                    <div class="mn-document-metadata" style="display: block;">
+                                    <div class="mn-document-metadata">
                                         <table class="mn-metadata-table">
                                             <tr>
                                                 <td>Wytworzył:</td>
@@ -312,13 +312,13 @@ function pdf_metryczka_settings_page()
                                                 <td>Opublikowano przez:</td>
                                                 <td>Administrator</td>
                                                 <td>Data publikacji:</td>
-                                                <td>05-01-2023</td>
+                                                <td>05-01-2023 19:30</td>
                                             </tr>
                                             <tr>
                                                 <td>Zaktualizował:</td>
                                                 <td>Administrator</td>
                                                 <td>Data aktualizacji:</td>
-                                                <td>15-01-2023</td>
+                                                <td>15-01-2023 07:15</td>
                                             </tr>
                                             <tr>
                                                 <td>Liczba pobrań:</td>

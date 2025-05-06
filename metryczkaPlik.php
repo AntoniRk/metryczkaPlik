@@ -3,7 +3,7 @@
 /*
 Plugin Name: Metryczki dla załączników
 Description: Automatycznie wykrywa linki do <strong>załączników</strong> i dodaje przycisk do wyświetlania ich <strong>metryczek</strong>. Nowe dane przy dodawaniu plików i edycji. 
-Version: 0.37
+Version: 0.38
 Author: Antoni Roskosz
 */
 
@@ -428,33 +428,33 @@ function check_pdf_links()
                                         return;
                                     }
                                     let metadataHTML = `
-                                        <table class="mn-metadata-table" style="width: 100%; border-collapse: collapse;">
+                                        <table class="mn-metadata-table">
                                             <tr>
-                                                <td style="padding: 5px; border: 1px solid #ddd; font-weight: bold;">Wytworzył:</td>
-                                                <td style="padding: 5px; border: 1px solid #ddd;">${data.autor || 'Brak danych'}</td>
-                                                <td style="padding: 5px; border: 1px solid #ddd; font-weight: bold;">Data wytworzenia:</td>
-                                                <td style="padding: 5px; border: 1px solid #ddd;">${formatDateDMY(data.data_wytworzenia) || 'Brak danych'}</td>
+                                                <td>Wytworzył:</td>
+                                                <td>${data.autor || 'Brak danych'}</td>
+                                                <td>Data wytworzenia:</td>
+                                                <td>${formatDateDMY(data.data_wytworzenia) || 'Brak danych'}</td>
                                             </tr>
                                             <tr>
-                                                <td style="padding: 5px; border: 1px solid #ddd; font-weight: bold;">Opublikowano przez:</td>
-                                                <td style="padding: 5px; border: 1px solid #ddd;">${data.publikator || 'Brak danych'}</td>
-                                                <td style="padding: 5px; border: 1px solid #ddd; font-weight: bold;">Data publikacji:</td>
-                                                <td style="padding: 5px; border: 1px solid #ddd;">${formatDateDMYHM(data.data_publikacji) || 'Brak danych'}</td>
+                                                <td>Opublikowano przez:</td>
+                                                <td>${data.publikator || 'Brak danych'}</td>
+                                                <td>Data publikacji:</td>
+                                                <td>${formatDateDMYHM(data.data_publikacji) || 'Brak danych'}</td>
                                             </tr>`;
                                     if (data.zaktualizowal && data.data_aktualizacji) {
                                         console.log('Zaktualizowano:', data.zaktualizowal, data.data_aktualizacji);
                                         metadataHTML += `
                                             <tr>
-                                                <td style="padding: 5px; border: 1px solid #ddd; font-weight: bold;">Zaktualizował:</td>
-                                                <td style="padding: 5px; border: 1px solid #ddd;">${data.zaktualizowal}</td>
-                                                <td style="padding: 5px; border: 1px solid #ddd; font-weight: bold;">Data aktualizacji:</td>
-                                                <td style="padding: 5px; border: 1px solid #ddd; white-space: nowrap;">${formatDateDMYHM(data.data_aktualizacji)}</td>
+                                                <td>Zaktualizował:</td>
+                                                <td>${data.zaktualizowal}</td>
+                                                <td>Data aktualizacji:</td>
+                                                <td>${formatDateDMYHM(data.data_aktualizacji)}</td>
                                             </tr>`;
                                     }
                                     metadataHTML += `
                                         <tr>
-                                            <td style="padding: 5px; border: 1px solid #ddd; font-weight: bold;">Liczba pobrań:</td>
-                                            <td colspan="3" style="padding: 5px; border: 1px solid #ddd;">${data.liczba_pobran || '0'}</td>
+                                            <td>Liczba pobrań:</td>
+                                            <td colspan="3">${data.liczba_pobran || '0'}</td>
                                         </tr>
                                     </table>`;
 
@@ -555,33 +555,33 @@ function check_pdf_links()
                                         return;
                                     }
                                     let metadataHTML = `
-                                        <table class="mn-metadata-table" style="width: 100%; border-collapse: collapse;">
+                                        <table class="mn-metadata-table">
                                             <tr>
-                                                <td style="padding: 5px; border: 1px solid #ddd; font-weight: bold;">Wytworzył:</td>
-                                                <td style="padding: 5px; border: 1px solid #ddd;">${data.autor || 'Brak danych'}</td>
-                                                <td style="padding: 5px; border: 1px solid #ddd; font-weight: bold;">Data wytworzenia:</td>
-                                                <td style="padding: 5px; border: 1px solid #ddd;">${formatDateDMY(data.data_wytworzenia) || 'Brak danych'}</td>
+                                                <td>Wytworzył:</td>
+                                                <td>${data.autor || 'Brak danych'}</td>
+                                                <td>Data wytworzenia:</td>
+                                                <td>${formatDateDMY(data.data_wytworzenia) || 'Brak danych'}</td>
                                             </tr>
                                             <tr>
-                                                <td style="padding: 5px; border: 1px solid #ddd; font-weight: bold;">Opublikowano przez:</td>
-                                                <td style="padding: 5px; border: 1px solid #ddd;">${data.publikator || 'Brak danych'}</td>
-                                                <td style="padding: 5px; border: 1px solid #ddd; font-weight: bold;">Data publikacji:</td>
-                                                <td style="padding: 5px; border: 1px solid #ddd;">${formatDateDMYHM(data.data_publikacji) || 'Brak danych'}</td>
+                                                <td>Opublikowano przez:</td>
+                                                <td>${data.publikator || 'Brak danych'}</td>
+                                                <td>Data publikacji:</td>
+                                                <td>${formatDateDMYHM(data.data_publikacji) || 'Brak danych'}</td>
                                             </tr>`;
                                     if (data.zaktualizowal != '' && data.data_aktualizacji != '') {
                                         console.log('Zaktualizowano:', data.zaktualizowal, data.data_aktualizacji);
                                         metadataHTML += `
                                             <tr>
-                                                <td style="padding: 5px; border: 1px solid #ddd; font-weight: bold;">Zaktualizował:</td>
-                                                <td style="padding: 5px; border: 1px solid #ddd;">${data.zaktualizowal}</td>
-                                                <td style="padding: 5px; border: 1px solid #ddd; font-weight: bold;">Data aktualizacji:</td>
-                                                <td style="padding: 5px; border: 1px solid #ddd; white-space: nowrap;">${formatDateDMYHM(data.data_aktualizacji)}</td>
+                                                <td>Zaktualizował:</td>
+                                                <td>${data.zaktualizowal}</td>
+                                                <td>Data aktualizacji:</td>
+                                                <td>${formatDateDMYHM(data.data_aktualizacji)}</td>
                                             </tr>`;
                                     }
                                     metadataHTML += `
                                         <tr>
-                                            <td style="padding: 5px; border: 1px solid #ddd; font-weight: bold;">Liczba pobrań:</td>
-                                            <td colspan="3" style="padding: 5px; border: 1px solid #ddd;">${data.liczba_pobran || '0'}</td>
+                                            <td>Liczba pobrań:</td>
+                                            <td colspan="3">${data.liczba_pobran || '0'}</td>
                                         </tr>
                                     </table>`;
 
@@ -642,7 +642,7 @@ function check_pdf_links()
                                     $('#pdfTitle').html(`<a href="${url}" target="_blank" onclick="incrementDownloads('${url}')">${title}</a>`);
                                     $('#pdfDetails').html(() => {
                                         let tableHTML = `
-                                            <table class="table table-bordered table-hover">
+                                            <table class="table">
                                                 <tr>
                                                     <td>Wytworzył:</td>
                                                     <td>${data.autor}</td>
@@ -725,7 +725,7 @@ function check_pdf_links()
                                     $('#pdfTitle').html(`<a href="${url}" target="_blank" onclick="incrementDownloads('${url}')">${title}</a>`);
                                     $('#pdfDetails').html(() => {
                                         let tableHTML = `
-                                            <table class="table table-bordered table-hover">
+                                            <table class="table">
                                                 <tr>
                                                     <td>Wytworzył:</td>
                                                     <td>${data.autor}</td>
@@ -782,7 +782,7 @@ function check_pdf_links()
                         $('#pdfTitle').html(`<a href="${url}" target="_blank" onclick="incrementDownloads('${url}')">${title}</a>`);
                         $('#pdfDetails').html(() => {
                             let tableHTML = `
-                                            <table class="table table-bordered table-hover">
+                                            <table class="table">
                                                 <tr>
                                                     <td>Wytworzył:</td>
                                                     <td>${data.autor}</td>
@@ -836,7 +836,7 @@ function check_pdf_links()
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="pdfTitle" style="font-size: 1rem;"></h5>
+                        <h5 class="modal-title" id="pdfTitle"></h5>
                     </div>
                     <div class="modal-body" id="pdfDetails"></div>
                     <div class="modal-footer">
@@ -878,23 +878,6 @@ function get_pdf_data()
 
         if (!empty($attachments)) {
             $attachment_id = $attachments[0]->ID;
-        } else {
-            // Jeśli nadal nie znaleziono, utwórz tymczasowy obiekt danych
-            $virtual_data = array(
-                'autor' => 'Nieznany',
-                'data_wytworzenia' => current_time('mysql'),
-                'data_publikacji' => current_time('mysql'),
-                'publikator' => 'System',
-                'liczba_pobran' => 0,
-                'nazwa_wyswietlana' => $title,
-                'nazwa_pliku' => $slug,
-                'url' => $url,
-                'zaktualizowal' => '',
-                'data_aktualizacji' => ''
-            );
-
-            wp_send_json($virtual_data);
-            return;
         }
     }
 
@@ -912,12 +895,12 @@ function get_pdf_data()
 
     // Pobierz metadane
     $data = array(
-        'autor' => get_post_meta($attachment_id, 'wytworzyl', true) ?: 'Nieznany',
-        'data_wytworzenia' => get_post_meta($attachment_id, 'data_wytworzenia', true) ?: current_time('mysql'),
+        'autor' => get_post_meta($attachment_id, 'wytworzyl', true) ?: '',
+        'data_wytworzenia' => get_post_meta($attachment_id, 'data_wytworzenia', true) ?: '',
         'data_publikacji' => get_the_date('Y-m-d H:i:s', $attachment_id),
         'publikator' => get_the_author_meta('display_name', $attachment_post->post_author),
         'zaktualizowal' => isset($attachment_post->zaktualizowal) ? $attachment_post->zaktualizowal : '',
-        'data_aktualizacji' => $attachment_post->post_modified ? date_i18n('d-m-Y H:i', strtotime($attachment_post->post_modified)) : '',
+        'data_aktualizacji' => isset($attachment_post->post_modified) ? $attachment_post->post_modified : '',
         'liczba_pobran' => intval(get_post_meta($attachment_id, 'pdf_liczba_pobran', true)),
         'nazwa_wyswietlana' => get_the_title($attachment_id),
         'nazwa_pliku' => basename(get_attached_file($attachment_id)),
