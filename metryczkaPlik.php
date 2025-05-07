@@ -8,7 +8,7 @@ Author: Antoni Roskosz
 */
 
 // Dodaj stałą lokalizację wtyczki
-define( 'LOKALIZACJA_WTYCZKI', plugin_dir_path( __FILE__ ) );
+define('LOKALIZACJA_WTYCZKI', plugin_dir_path(__FILE__));
 
 // Załącz pozostałe pliki z funkcjami
 require_once LOKALIZACJA_WTYCZKI . 'includes/metryczkaMedia.php';
@@ -107,16 +107,6 @@ function check_pdf_links()
                                     ?>;
 
             var debugMode = <?php echo isset($options['debug_mode']) && $options['debug_mode'] ? 'true' : 'false'; ?>;
-
-            function logDebug(message, data) {
-                if (debugMode) {
-                    if (data) {
-                        console.log(message, data);
-                    } else {
-                        console.log(message);
-                    }
-                }
-            }
 
             function formatDateDMY(dateStr) {
                 if (!dateStr) return 'Nieznana';
@@ -233,7 +223,6 @@ function check_pdf_links()
                         if (linkText.includes('pdf') ||
                             linkText.includes('pobierz dokument') ||
                             linkText.includes('download document')) {
-                            logDebug('Wykryto PDF przez kontekst tekstu:', linkText);
                             isPdf = true;
                         }
                     }
@@ -244,8 +233,6 @@ function check_pdf_links()
                 // Zmień sposób wybierania linków PDF
                 const allLinks = document.querySelectorAll('a');
                 const pdfLinks = Array.from(allLinks).filter(isPdfLink);
-
-                logDebug('Wykryto linki PDF:', pdfLinks.length);
 
                 pdfLinks.forEach(link => {
 
@@ -267,7 +254,6 @@ function check_pdf_links()
                         const isInFooter = $link.closest('footer, .footer, #footer').length > 0;
 
                         if (isInHeader || isInFooter) {
-                            logDebug('Link wykluczony - znajduje się w header/footer:', link.textContent);
                             isExcluded = true;
                         }
 
@@ -276,7 +262,6 @@ function check_pdf_links()
                             for (let i = 0; i < excludedElements.length; i++) {
                                 const element = excludedElements[i].trim();
                                 if (element && $link.closest(element).length > 0) {
-                                    logDebug('Link wykluczony przez element:', element, link.textContent);
                                     isExcluded = true;
                                     break;
                                 }
@@ -290,7 +275,6 @@ function check_pdf_links()
                                 if (className) {
                                     // Sprawdź czy link ma wykluczoną klasę lub znajduje się w elemencie z wykluczoną klasą
                                     if ($link.hasClass(className) || $link.closest('.' + className).length > 0) {
-                                        logDebug('Link wykluczony przez klasę:', className, link.textContent);
                                         isExcluded = true;
                                         break;
                                     }
@@ -308,7 +292,7 @@ function check_pdf_links()
                         // Pobierz URL bazowy strony
                         const baseUrl = window.location.origin;
 
-                        // Normalizuj URL - upewnij się, że zaczyna się od "/"
+                        // Normalizuj URL
                         let normalizedUrl = documentUrl;
                         if (!normalizedUrl.startsWith('/') && !normalizedUrl.startsWith('http')) {
                             normalizedUrl = '/' + normalizedUrl;
@@ -316,118 +300,98 @@ function check_pdf_links()
 
                         // Pełny URL do wykorzystania w AJAX
                         let fullUrl = normalizedUrl;
-
-                        // Jeśli URL zaczyna się od "/" (ścieżka względna), dodaj bazowy URL
                         if (normalizedUrl.startsWith('/')) {
                             fullUrl = baseUrl + normalizedUrl;
                         }
 
-                        // Sprawdź czy URL kończy się na .pdf lub prowadzi do załącznika PDF bez rozszerzenia
-                        let isPdf = normalizedUrl.toLowerCase().endsWith('.pdf');
+                        // Zawsze traktuj linki w mn-document-download jako pliki
+                        let isFile = true;
 
-                        // Jeśli link nie kończy się na .pdf, zakładamy że to potencjalny PDF bez rozszerzenia
-                        if (!isPdf) {
-                            isPdf = true;
+                        // Dodaj przycisk "Metryczka" przed linkiem "Pobierz"
+                        const metrykaButton = document.createElement('a');
+                        metrykaButton.href = 'javascript:void(0)';
+                        metrykaButton.className = 'mn-document-metryczka';
+                        metrykaButton.textContent = 'Metryczka';
+                        metrykaButton.style.cursor = 'pointer';
+                        metrykaButton.style.color = '#007bff';
+                        metrykaButton.style.textDecoration = 'underline';
+
+                        // Wstaw przycisk przed linkiem "Pobierz"
+                        link.parentNode.insertBefore(metrykaButton, link);
+
+                        // Stwórz ukryty kontener na tabelę z metadanymi
+                        const metadataContainer = document.createElement('div');
+                        metadataContainer.className = 'pdf-metadata-container';
+                        metadataContainer.style.display = 'none';
+                        metadataContainer.style.width = '100%';
+
+                        // Dodaj kontener na końcu .mn-document-download
+                        $downloadContainer.append(metadataContainer);
+
+                        // Funkcja do płynnego pokazywania/ukrywania tabelki z użyciem jQuery
+                        function toggleMetadataContainer($container, show) {
+                            if (show) {
+                                $container.css({
+                                    display: 'block',
+                                    overflow: 'hidden',
+                                    maxHeight: '0',
+                                    opacity: '0',
+                                    paddingTop: '0',
+                                    paddingBottom: '0',
+                                    borderWidth: '1px'
+                                }).animate({
+                                    maxHeight: '100%',
+                                    opacity: 1,
+                                    paddingTop: '10px',
+                                    paddingBottom: '10px'
+                                }, 0, 'swing', function() {
+                                    // Callback po zakończeniu animacji
+                                    $container.css('overflow', 'visible');
+                                });
+                            } else {
+                                $container.css('overflow', 'hidden').animate({
+                                    maxHeight: '0',
+                                    opacity: 0,
+                                    paddingTop: '0',
+                                    paddingBottom: '0'
+                                }, 0, 'swing', function() {
+                                    // Callback po zakończeniu animacji
+                                    $container.css('display', 'none');
+                                });
+                            }
                         }
 
-                        if (isPdf) {
-                            // Dodaj przycisk "Metryczka" przed linkiem "Pobierz"
-                            const metrykaButton = document.createElement('a');
-                            metrykaButton.href = 'javascript:void(0)';
-                            metrykaButton.className = 'mn-document-metryczka';
-                            metrykaButton.textContent = 'Metryczka';
-                            metrykaButton.style.marginRight = '10px';
-                            metrykaButton.style.cursor = 'pointer';
-                            metrykaButton.style.color = '#007bff';
-                            metrykaButton.style.textDecoration = 'underline';
+                        // Dodaj obsługę kliknięcia przycisku "Metryczka"
+                        metrykaButton.addEventListener('click', function() {
+                            const $metadataContainer = $(metadataContainer);
 
-                            // Wstaw przycisk przed linkiem "Pobierz"
-                            link.parentNode.insertBefore(metrykaButton, link);
-
-                            // Dodaj separator
-                            const separator = document.createTextNode(' | ');
-                            link.parentNode.insertBefore(separator, link);
-
-                            // Stwórz ukryty kontener na tabelę z metadanymi
-                            const metadataContainer = document.createElement('div');
-                            metadataContainer.className = 'pdf-metadata-container';
-                            metadataContainer.style.display = 'none';
-                            metadataContainer.style.width = '100%';
-
-                            // Dodaj kontener na końcu .mn-document-download
-                            $downloadContainer.append(metadataContainer);
-
-                            // Funkcja do płynnego pokazywania/ukrywania tabelki z użyciem jQuery
-                            function toggleMetadataContainer($container, show) {
-                                if (show) {
-                                    $container.css({
-                                        display: 'block',
-                                        overflow: 'hidden',
-                                        maxHeight: '0',
-                                        opacity: '0',
-                                        paddingTop: '0',
-                                        paddingBottom: '0',
-                                        borderWidth: '1px'
-                                    }).animate({
-                                        maxHeight: '100%',
-                                        opacity: 1,
-                                        paddingTop: '10px',
-                                        paddingBottom: '10px'
-                                    }, 0, 'swing', function() {
-                                        // Callback po zakończeniu animacji
-                                        $container.css('overflow', 'visible');
-                                    });
-                                } else {
-                                    $container.css('overflow', 'hidden').animate({
-                                        maxHeight: '0',
-                                        opacity: 0,
-                                        paddingTop: '0',
-                                        paddingBottom: '0'
-                                    }, 0, 'swing', function() {
-                                        // Callback po zakończeniu animacji
-                                        $container.css('display', 'none');
-                                    });
-                                }
+                            // Jeśli kontener jest już widoczny, ukryj go
+                            if (metadataContainer.style.display === 'block') {
+                                toggleMetadataContainer($metadataContainer, false);
+                                return;
                             }
 
-                            // Dodaj obsługę kliknięcia przycisku "Metryczka"
-                            metrykaButton.addEventListener('click', function() {
-                                const $metadataContainer = $(metadataContainer);
+                            // Pokaż kontener z komunikatem ładowania
+                            metadataContainer.innerHTML = '<div class="loading">Ładowanie metadanych...</div>';
+                            toggleMetadataContainer($metadataContainer, true);
 
-                                // Jeśli kontener jest już widoczny, ukryj go
-                                if (metadataContainer.style.display === 'block') {
-                                    toggleMetadataContainer($metadataContainer, false);
-                                    return;
-                                }
 
-                                // Pokaż kontener z komunikatem ładowania
-                                metadataContainer.innerHTML = '<div class="loading">Ładowanie metadanych...</div>';
-                                toggleMetadataContainer($metadataContainer, true);
-
-                                // Loguj informacje o URL dla celów debugowania
-                                logDebug('URL dokumentu:', {
-                                    original: documentUrl,
-                                    normalized: normalizedUrl,
-                                    full: fullUrl,
-                                    name: documentName
-                                });
-
-                                // Pobierz metadane przez AJAX
-                                $.post(ajaxurl, {
-                                    action: 'get_pdf_data',
-                                    url: fullUrl, // Używamy pełnego URL
-                                    title: documentName, // Używamy nazwy z .mn-document-name
-                                    is_document_download: 'true' // Flaga wskazująca, że to element .mn-document-download
-                                }, function(data) {
-                                    if (!data) {
-                                        metadataContainer.innerHTML = `
+                            // Pobierz metadane przez AJAX
+                            $.post(ajaxurl, {
+                                action: 'get_pdf_data',
+                                url: fullUrl, // Używamy pełnego URL
+                                title: documentName, // Używamy nazwy z .mn-document-name
+                                is_document_download: 'true' // Flaga wskazująca, że to element .mn-document-download
+                            }, function(data) {
+                                if (!data) {
+                                    metadataContainer.innerHTML = `
                                             <div>
                                                 <strong>Uwaga:</strong> Nie znaleziono metadanych dla tego dokumentu.
                                             </div>
                                         `;
-                                        return;
-                                    }
-                                    let metadataHTML = `
+                                    return;
+                                }
+                                let metadataHTML = `
                                         <table class="mn-metadata-table">
                                             <tr>
                                                 <td>Wytworzył:</td>
@@ -441,58 +405,57 @@ function check_pdf_links()
                                                 <td>Data publikacji:</td>
                                                 <td>${formatDateDMYHM(data.data_publikacji) || 'Brak danych'}</td>
                                             </tr>`;
-                                    if (data.zaktualizowal && data.data_aktualizacji) {
-                                        console.log('Zaktualizowano:', data.zaktualizowal, data.data_aktualizacji);
-                                        metadataHTML += `
+                                if (data.zaktualizowal && data.data_aktualizacji) {
+                                    console.log('Zaktualizowano:', data.zaktualizowal, data.data_aktualizacji);
+                                    metadataHTML += `
                                             <tr>
                                                 <td>Zaktualizował:</td>
                                                 <td>${data.zaktualizowal}</td>
                                                 <td>Data aktualizacji:</td>
                                                 <td>${formatDateDMYHM(data.data_aktualizacji)}</td>
                                             </tr>`;
-                                    }
-                                    metadataHTML += `
+                                }
+                                metadataHTML += `
                                         <tr>
                                             <td>Liczba pobrań:</td>
                                             <td colspan="3">${data.liczba_pobran || '0'}</td>
                                         </tr>
                                     </table>`;
 
-                                    metadataContainer.innerHTML = metadataHTML;
-                                }).fail(function(jqXHR, textStatus, errorThrown) {
-                                    console.error('Błąd AJAX:', textStatus, errorThrown);
-                                    metadataContainer.innerHTML = `
+                                metadataContainer.innerHTML = metadataHTML;
+                            }).fail(function(jqXHR, textStatus, errorThrown) {
+                                console.error('Błąd AJAX:', textStatus, errorThrown);
+                                metadataContainer.innerHTML = `
                                         <div>
                                             <strong>Błąd:</strong> Nie udało się pobrać metadanych dokumentu.
                                             <p>Szczegóły: ${textStatus} - ${errorThrown || 'Nieznany błąd'}</p>
                                         </div>
                                     `;
-                                });
                             });
+                        });
 
-                            // Dodaj obsługę kliknięcia linku "Pobierz"
-                            link.addEventListener('click', function(e) {
-                                // Inkrementuj licznik pobrań
-                                $.post(ajaxurl, {
-                                    action: 'increment_downloads',
-                                    url: fullUrl,
-                                    is_document_download: 'true'
-                                }, function(response) {
-                                    if (response.success) {
-                                        // Znajdź komórkę z liczbą pobrań w bieżącym kontenerze metadanych, tu można zmienić wyszukiwanie na np. id
-                                        const downloadsCell = metadataContainer.querySelector('td[colspan="3"]');
-                                        if (downloadsCell && metadataContainer.style.display === 'block') {
-                                            // Aktualizuj licznik pobrań
-                                            downloadsCell.textContent = response.data.count;
-                                        }
+                        // Dodaj obsługę kliknięcia linku "Pobierz"
+                        link.addEventListener('click', function(e) {
+                            // Inkrementuj licznik pobrań
+                            $.post(ajaxurl, {
+                                action: 'increment_downloads',
+                                url: fullUrl,
+                                is_document_download: 'true'
+                            }, function(response) {
+                                if (response.success) {
+                                    // Znajdź komórkę z liczbą pobrań w bieżącym kontenerze metadanych, tu można zmienić wyszukiwanie na np. id
+                                    const downloadsCell = metadataContainer.querySelector('td[colspan="3"]');
+                                    if (downloadsCell && metadataContainer.style.display === 'block') {
+                                        // Aktualizuj licznik pobrań
+                                        downloadsCell.textContent = response.data.count;
                                     }
-                                });
+                                }
                             });
-                        }
+                        });
+
                     } else if (!isExcluded) {
                         // Sprawdź rozmiar kontenera
                         const parentWidth = $(link).parent().width();
-                        logDebug('Link width:', parentWidth, link.textContent);
 
                         if (parentWidth >= 600) {
                             // Szerokość >= 600px: Tekst "Metryczka" obok
@@ -845,7 +808,7 @@ function check_pdf_links()
                 </div>
             </div>
         </div>
-    <?php
+<?php
     }, 99);
 }
 
