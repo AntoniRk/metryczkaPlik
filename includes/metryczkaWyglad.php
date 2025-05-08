@@ -8,27 +8,27 @@ function pdf_metryczka_default_options()
         'enable_extended_detection' => 1,
         'display_icon' => 1,
         'button_css' => ".pdf-container {
-    display: inline-flex;
-    align-items: center;
+    display: inline-flex !important;
+    align-items: center !important;
 }
 
 .pdf-link-text {
-    color: blue;
-    text-decoration: underline;
+    color: blue !important;
+    text-decoration: underline !important;
 }
 
 .fa-info-circle {
-    color: #007bff;
-    cursor: pointer;
-    text-decoration: none;
+    color: #007bff !important;
+    cursor: pointer !important;
+    text-decoration: none !important;
 }
 
 .fa-info-circle:hover {
-    color: #0056b3;
+    color: #0056b3 !important;
 }",
         'modal_css' => ".modal-content {
     border: 2px solid #003c7d !important;
-    border-radius: 0px 40px !important;
+    border-radius: 0px 40px 10px !important;
     margin: auto !important;
 }
 
@@ -51,35 +51,35 @@ function pdf_metryczka_default_options()
 }
 
 #pdfTitle {
-    font-weight: bold;
+    font-weight: bold !important;
 }
 
 #pdfDetails table {
-    width: 100%;
-    margin-bottom: 0;
+    width: 100% !important;
+    margin-bottom: 0 !important;
 }
 
 #pdfDetails table tr td:nth-child(even) {
-    font-weight: bold;
+    font-weight: bold !important;
 }
 
 #pdfDetails table tr:nth-child(odd) {
-    background-color: #f2f2f2;
+    background-color: #f2f2f2 !important;
 }
 
 #pdfDetails table td {
-    border-top: 1px solid #003c7d; 
-    padding: 4px 6px;
-    font-size: 13px;
+    border-top: 1px solid #003c7d !important; 
+    padding: 4px 6px !important;
+    font-size: 13px !important;
 }
 
 #pdfDetails table tr:last-child {
-    border-bottom: 1px solid #003c7d; 
+    border-bottom: 1px solid #003c7d !important; 
 }
 
 #pdfDetails td {
-    padding: 8px;
-    border: none;
+    padding: 8px !important;
+    border: none !important;
 }
 
 #pdfDetails table td:nth-child(4n) {
@@ -88,14 +88,14 @@ function pdf_metryczka_default_options()
 
 @media (max-width: 420px) {
     #pdfDetails table td:nth-child(4n) {
-        white-space: normal;
+        white-space: normal !important;
     }
 }
 
 @media (max-width: 600px) {
     #pdfDetails {
-        font-size: 14px;
-        padding: 5px;
+        font-size: 14px !important;
+        padding: 5px !important;
     }
 
     #pdfDetails table td:nth-child(3n) {
@@ -104,48 +104,48 @@ function pdf_metryczka_default_options()
     }
 }",
         'table_css' => ".mn-document-metadata, .pdf-metadata-container {
-    margin-top: 10px;
-    padding: 10px;
-    background-color: #f8f9fa;
-    border: 2px solid #003c7d;
-    border-radius: 0px 10px;
-    transition: all 0.3s ease;
+    margin-top: 10px !important;
+    padding: 10px !important;
+    background-color: #f8f9fa !important;
+    border: 2px solid #003c7d !important;
+    border-radius: 0px 10px 10px !important;
+    transition: all 0.3s ease !important;
 }
 
 .mn-metadata-table {
-    width: 100%;
-    border-collapse: collapse;
+    width: 100% !important;
+    border-collapse: collapse !important;
 }
 
 .mn-metadata-table td {
-    padding: 5px;
-    border-top: 1px solid #003c7d; 
+    padding: 5px !important;
+    border-top: 1px solid #003c7d !important; 
 }
 
 .mn-metadata-table tr td:nth-child(even) {
-    font-weight: bold;
+    font-weight: bold !important;
 }
 
 .mn-metadata-table tr:nth-child(odd) {
-    background-color: #f2f2f2;
+    background-color: #f2f2f2 !important;
 }
 
 .mn-metadata-table tr:last-child {
-    border-bottom: 1px solid #003c7d; 
+    border-bottom: 1px solid #003c7d !important; 
 }
 
 @media (max-width: 600px) {
     .mn-document-metadata, .pdf-metadata-container {
-        font-size: 14px;
-        padding: 5px;
+        font-size: 14px !important;
+        padding: 5px !important;
     }
 
     .mn-metadata-table tr:nth-child(odd) {
-        background-color: white;
+        background-color: white !important;
     }
 
     .mn-metadata-table td:nth-child(odd) {
-        background-color: #f2f2f2;
+        background-color: #f2f2f2 !important;
     }
 }",
         'excluded_elements' => '',
