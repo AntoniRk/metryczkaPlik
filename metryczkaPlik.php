@@ -176,63 +176,73 @@ function check_pdf_links()
             document.addEventListener('DOMContentLoaded', function() {
                 const $ = jQuery;
 
-                // Funkcja sprawdzająca czy link to PDF
-                function isPdfLink(link) {
-                    let isPdf = false;
+                function isFileLink(link) {
+                    let isFile = false;
 
-                    // Sprawdź standardowe rozszerzenie .pdf
-                    if (link.href.toLowerCase().endsWith('.pdf')) {
-                        isPdf = true;
+                    // Lista popularnych rozszerzeń plików
+                    const fileExtensions = [
+                        'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx',
+                        'txt', 'csv', 'zip', 'rar', 'gz', 'tar', '7z',
+                        'jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg', 'webp',
+                        'mp3', 'mp4', 'wav', 'avi', 'mov', 'wmv', 'flv', 'mkv'
+                    ];
+
+                    // Sprawdź rozszerzenie pliku w URL
+                    const href = link.href.toLowerCase();
+                    const fileExtRegex = new RegExp('\\.(' + fileExtensions.join('|') + ')([?#].*)?$', 'i');
+
+                    if (fileExtRegex.test(href)) {
+                        isFile = true;
                     }
 
-                    // Jeśli już wiemy, że to PDF lub rozszerzone wykrywanie jest wyłączone, nie sprawdzaj dalej
-                    if (isPdf || !enableExtendedDetection) {
-                        return isPdf;
+                    // Jeśli już wiemy, że to plik lub rozszerzone wykrywanie jest wyłączone, nie sprawdzaj dalej
+                    if (isFile || !enableExtendedDetection) {
+                        return isFile;
                     }
 
                     // Sprawdź atrybut download
-                    const downloadAttr = link.getAttribute('download');
-                    if (downloadAttr && downloadAttr.toLowerCase().endsWith('.pdf')) {
-                        isPdf = true;
+                    if (link.hasAttribute('download')) {
+                        isFile = true;
                     }
 
-                    // Sprawdź atrybut type
-                    if (!isPdf) {
-                        const typeAttr = link.getAttribute('type');
-                        if (typeAttr && (
-                                typeAttr === 'application/pdf' ||
-                                typeAttr === 'pdf' ||
-                                typeAttr.toLowerCase().includes('pdf')
-                            )) {
-                            isPdf = true;
+                    // Sprawdź atrybut type wskazujący na plik
+                    const typeAttr = link.getAttribute('type');
+                    if (typeAttr && (
+                            typeAttr.startsWith('application/') ||
+                            typeAttr.startsWith('image/') ||
+                            typeAttr.startsWith('audio/') ||
+                            typeAttr.startsWith('video/')
+                        )) {
+                        isFile = true;
+                    }
+
+                    // Sprawdź klasy wskazujące na plik
+                    const fileClasses = ['file', 'download', 'attachment', 'document'];
+                    for (const cls of fileClasses) {
+                        if (link.classList.contains(cls)) {
+                            isFile = true;
+                            break;
                         }
                     }
 
-                    // Sprawdź klasę
-                    if (!isPdf) {
-                        if (link.classList.contains('pdf') ||
-                            link.classList.contains('pdf-file') ||
-                            link.classList.contains('download-pdf')) {
-                            isPdf = true;
-                        }
-                    }
-
-                    // Sprawdź tekst linku - tylko jeśli jeszcze nie zidentyfikowaliśmy jako PDF
-                    if (!isPdf) {
+                    // Sprawdź tekst linku wskazujący na plik do pobrania
+                    if (!isFile) {
                         const linkText = link.textContent.toLowerCase();
-                        if (linkText.includes('pdf') ||
-                            linkText.includes('pobierz dokument') ||
-                            linkText.includes('download document')) {
-                            isPdf = true;
+                        if (linkText.includes('pobierz') ||
+                            linkText.includes('download') ||
+                            linkText.includes('ściągnij') ||
+                            linkText.includes('plik') ||
+                            linkText.includes('dokument')) {
+                            isFile = true;
                         }
                     }
 
-                    return isPdf;
+                    return isFile;
                 }
 
                 // Zmień sposób wybierania linków PDF
                 const allLinks = document.querySelectorAll('a');
-                const pdfLinks = Array.from(allLinks).filter(isPdfLink);
+                const pdfLinks = Array.from(allLinks).filter(isFileLink);
 
                 pdfLinks.forEach(link => {
 
