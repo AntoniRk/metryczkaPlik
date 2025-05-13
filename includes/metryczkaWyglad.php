@@ -28,7 +28,7 @@ function pdf_metryczka_default_options()
 }",
         'modal_css' => ".modal-content {
     border: 2px solid #003c7d !important;
-    border-radius: 0px 40px 10px !important;
+    border-radius: 10px 40px 10px !important;
     margin: auto !important;
 }
 
@@ -146,6 +146,13 @@ function pdf_metryczka_default_options()
 
     .mn-metadata-table td:nth-child(odd) {
         background-color: #f2f2f2 !important;
+    }
+
+    .mn-document-metadata table.mn-metadata-table td,
+    .pdf-metadata-container table.mn-metadata-table td {
+        display: block !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
     }
 }",
         'excluded_elements' => '',

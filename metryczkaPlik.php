@@ -46,51 +46,7 @@ function check_pdf_links()
                 display: none;
             }
 
-            <?php endif; ?><?php echo $modal_css; ?><?php echo $table_css; ?>.mn-document-metryczka {
-                display: inline-block;
-                color: #007bff;
-                text-decoration: underline;
-                cursor: pointer;
-                margin-right: 10px;
-            }
-
-            .mn-document-metryczka:hover {
-                color: #0056b3;
-            }
-
-            .mn-document-metryczka i {
-                font-size: 1.2em;
-            }
-
-            .mn-document-download {
-                flex-wrap: wrap;
-            }
-
-            .mn-document-metadata {
-                flex-basis: 100%;
-                width: 100%;
-                clear: both;
-            }
-
-            .modal-backdrop {
-                overflow: auto;
-            }
-
-            @media (max-width: 600px) {
-
-                .mn-document-metadata,
-                .pdf-metadata-container {
-                    font-size: 14px !important;
-                    padding: 5px !important;
-                }
-
-                .mn-document-metadata table.mn-metadata-table td,
-                .pdf-metadata-container table.mn-metadata-table td {
-                    display: block !important;
-                    width: 100% !important;
-                    box-sizing: border-box !important;
-                }
-            }
+            <?php endif; ?><?php echo $modal_css; ?><?php echo $table_css; ?>
         </style>
         <script>
             var enableExtendedDetection = <?php echo $enable_extended_detection ? 'true' : 'false'; ?>;
@@ -467,8 +423,7 @@ function check_pdf_links()
                         // Sprawdź rozmiar kontenera
                         const parentWidth = $(link).parent().width();
 
-                        if (parentWidth >= 600) {
-                            // Szerokość >= 600px: Tekst "Metryczka" obok
+                        if (parentWidth >= 400) {
                             const container = document.createElement('div');
                             container.className = 'pdf-container';
                             container.style.display = 'flex';
