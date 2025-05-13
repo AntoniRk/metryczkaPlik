@@ -120,11 +120,42 @@ function check_pdf_links()
                     url: url
                 }, function(response) {
                     if (response.success) {
-                        const countCell = document.querySelector('#pdfDetails #liczba_pobran');
+                        // Aktualizuj licznik w modalnym oknie
+                        const countCell = document.querySelector('#pdfModal #liczba_pobran');
                         if (countCell) countCell.textContent = response.data.count;
+
+                        // Aktualizuj licznik we wszystkich kontenerach metadanych na stronie
+                        const allMetadataContainers = document.querySelectorAll('.pdf-metadata-container');
+                        allMetadataContainers.forEach(container => {
+                            // Sprawdź, czy ten kontener metadanych jest dla tego samego URL
+                            const relatedLink = container.closest('.pdf-container')?.querySelector('a.pdf-link-text');
+                            if (relatedLink && relatedLink.href === url) {
+                                // Znajdź komórkę z liczbą pobrań
+                                const downloadsCell = container.querySelector('td[colspan="3"]');
+                                if (downloadsCell) {
+                                    downloadsCell.textContent = response.data.count;
+                                }
+                            }
+                        });
+
+                        // Aktualizuj licznik w kontenerach mn-document-download
+                        const documentContainers = document.querySelectorAll('.mn-document-download');
+                        documentContainers.forEach(container => {
+                            const downloadLink = container.querySelector('a[href="' + url + '"]');
+                            if (downloadLink) {
+                                const metadataTable = container.querySelector('.mn-metadata-table');
+                                if (metadataTable) {
+                                    const downloadsCell = metadataTable.querySelector('td[colspan="3"]');
+                                    if (downloadsCell) {
+                                        downloadsCell.textContent = response.data.count;
+                                    }
+                                }
+                            }
+                        });
                     }
                 });
             }
+
 
             // Dodaj zmienną globalną z opcją rozszerzonego wykrywania
             var enableExtendedDetection = <?php echo isset($options['enable_extended_detection']) && $options['enable_extended_detection'] ? 'true' : 'false'; ?>;
@@ -402,21 +433,7 @@ function check_pdf_links()
 
                         // Dodaj obsługę kliknięcia linku "Pobierz"
                         link.addEventListener('click', function(e) {
-                            // Inkrementuj licznik pobrań
-                            $.post(ajaxurl, {
-                                action: 'increment_downloads',
-                                url: fullUrl,
-                                is_document_download: 'true'
-                            }, function(response) {
-                                if (response.success) {
-                                    // Znajdź komórkę z liczbą pobrań w bieżącym kontenerze metadanych, tu można zmienić wyszukiwanie na np. id
-                                    const downloadsCell = metadataContainer.querySelector('td[colspan="3"]');
-                                    if (downloadsCell && metadataContainer.style.display === 'block') {
-                                        // Aktualizuj licznik pobrań
-                                        downloadsCell.textContent = response.data.count;
-                                    }
-                                }
-                            });
+                            incrementDownloads(link.href);
                         });
 
                     } else if (!isExcluded) {
