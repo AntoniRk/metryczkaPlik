@@ -543,7 +543,7 @@ function check_pdf_links()
                             });
 
                         } else if (parentWidth >= 300) {
-                            // Szerokość 300-600px: Ikona obok (z modalem)
+                            // Szerokość 300-400px: Ikona obok (z modalem)
                             const container = document.createElement('div');
                             container.className = 'pdf-container';
                             container.style.display = 'flex';
