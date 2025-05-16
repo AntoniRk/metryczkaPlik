@@ -9,8 +9,27 @@ Alternatywnie rozpakowany folder z wtyczką wrzuć w pliki serwera:
 *nazwa_wordpressa/wp-content/plugins*
 
 **Technologie:** PHP, JavaScript
+Wtyczka polega na stworzeniu odpowiedniej metryczki, dla każdego odnośnika spełniającego wprowadzone wymagania.
 
-Wtyczka polega na wczytaniu wszystkich odnośników zawartych w elemencie `<a>` na stronie, następnie sprawdzenie:
+---
+
+## Dokumentacja (JESZCZE SIĘ POZMIENIA)
+
+```
+METRYCZKAPLIK/
+├── includes/
+│   ├── metryczkaAdmin.php
+│   ├── metryczkaFormatowanie.php
+│   ├── metryczkaMedia.php
+│   ├── metryczkaWyglad.php
+├── metryczkaPlik.php
+└── README.md
+```
+### metryczkaPlik.php
+Główny plik, dołączanie wymaganych technologii i innych plików
+Funkcja wykrywająca linki, filtrująca je, a następnie całe działanie metryczek w tym: np. obsługa liczby pobrań.
+
+polega na wczytaniu wszystkich odnośników zawartych w elemencie `<a>` na stronie, następnie sprawdzenie:
 
 #### Etap 1: Sprawdzanie linku
 
@@ -30,23 +49,8 @@ Wtyczka polega na wczytaniu wszystkich odnośników zawartych w elemencie `<a>` 
 4. Inaczej (pozostałe przypadki)  
    → Dodanie ikony pod linkiem, ikona wywołuje modal  
 
----
 
-## Dokumentacja (JESZCZE SIĘ POZMIENIA)
 
-```
-METRYCZKAPLIK/
-├── includes/
-│   ├── metryczkaAdmin.php
-│   ├── metryczkaFormatowanie.php
-│   ├── metryczkaMedia.php
-│   ├── metryczkaWyglad.php
-├── metryczkaPlik.php
-└── README.md
-```
-### metryczkaPlik.php
-Główny plik, dołączanie wymaganych technologii i innych plików
-Funkcja wykrywająca linki, filtrująca je, a następnie całe działanie metryczek w tym: np. obsługa liczby pobrań.
 ### includes/metryczkaAdmin.php
 Ustawienia > Metryczki załączników
 Jeden wielki formularz, który decyduje o sposobach wykrywania plików, wykluczeniach, ich wyglądzie i wgląd w statystyki pobrań
