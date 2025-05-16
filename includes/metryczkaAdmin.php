@@ -52,7 +52,7 @@ function pdf_metryczka_settings_page()
         update_option('pdf_metryczka_options', $options);
     }
 
-    // Domyślne wartości dla nowych pól
+    // Domyślne wartości dla pól
     if (!isset($options['button_css'])) {
         $options['button_css'] = ".pdf-link {
             display: inline-flex;
