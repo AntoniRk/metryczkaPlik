@@ -117,34 +117,34 @@ Jeden wielki formularz, który decyduje o sposobach wykrywania plików, wyklucze
    - jeśli elementy zawarte w metryczce nie mają wprowadzonych styli, to im nadaje domyślne
    - wczytanie wymaganych technologii
    - strona z ustawieniami
-     - zakładka 'Ustawienia ogólne'
-        - wybór czy 'Automatyczne wykrywanie załączników'
-        - wybór czy 'Rozszerzone wykrywanie załączników'
-        - wybór czy 'Wyświetlanie ikony metryczki' (JESZCZE NIE)
-        - pole z 'Prefix URL'
-        - 'Wykluczenia' - do określenia elementów i klasy, które mają zostać wykluczone z dodawania metryczek
-             - pole 'Wykluczone elementy HTML'
-             - pole 'Wykluczone elementy CSS'
-     - zakładka 'Style i wygląd'
-          - wygląd przycisku metryczki
-               - pole do zmiany stylu
-               - przycisk do resetowania stylu do wartości domyślnej
-               - podgląd zmian przycisku na żywo
-          - wygląd metryczki w oknie 'modal'
-               - pole do zmiany stylu
-               - przycisk do resetowania stylu do wartości domyślnej
-               - podgląd zmian przycisku na żywo
-          - wygląd metryczki w formie tabeli rozwijanej
-               - pole do zmiany stylu
-               - przycisk do resetowania stylu do wartości domyślnej
-               - podgląd zmian przycisku na żywo
-     - zakładka 'Statystyki'
-          - funkcja pobierająca dane plików
-          - tabelka wyświetlająca 5 najczęściej pobieranych plików
-     - skrypt
-          - obsługujący zakładki
-          - resetujący domyślne wartości w 'wyglądzie'
-          - obsługujący podgląd na żywo
+      - zakładka 'Ustawienia ogólne'
+         - wybór czy 'Automatyczne wykrywanie załączników'
+         - wybór czy 'Rozszerzone wykrywanie załączników'
+         - wybór czy 'Wyświetlanie ikony metryczki' (JESZCZE NIE)
+         - pole z 'Prefix URL'
+         - 'Wykluczenia' - do określenia elementów i klasy, które mają zostać wykluczone z dodawania metryczek
+            - pole 'Wykluczone elementy HTML'
+            - pole 'Wykluczone elementy CSS'
+      - zakładka 'Style i wygląd'
+         - wygląd przycisku metryczki
+            - pole do zmiany stylu
+            - przycisk do resetowania stylu do wartości domyślnej
+            - podgląd zmian przycisku na żywo
+         - wygląd metryczki w oknie 'modal'
+            - pole do zmiany stylu
+            - przycisk do resetowania stylu do wartości domyślnej
+            - podgląd zmian przycisku na żywo
+         - wygląd metryczki w formie tabeli rozwijanej
+            - pole do zmiany stylu
+            - przycisk do resetowania stylu do wartości domyślnej
+            - podgląd zmian przycisku na żywo
+      - zakładka 'Statystyki'
+            - funkcja pobierająca dane plików
+            - tabelka wyświetlająca 5 najczęściej pobieranych plików
+      - skrypt
+         - obsługujący zakładki
+         - resetujący domyślne wartości w 'wyglądzie'
+         - obsługujący podgląd na żywo
 - funkcja `pdf_metryczka_check_options()` aktualizuje ustawienia przy każdym załadowaniu ustawień
 
 ## includes/metryczkaFormatowani.php
