@@ -81,6 +81,14 @@ Jeden wielki formularz, który decyduje o sposobach wykrywania plików, wyklucze
                - pole do zmiany stylu
                - przycisk do resetowania stylu do wartości domyślnej
                - podgląd zmian przycisku na żywo
+     - zakładka 'Statystyki'
+          - funkcja pobierająca dane plików
+          - tabelka wyświetlająca 5 najczęściej pobieranych plików
+     - skrypt
+          - obsługujący zakładki
+          - resetujący domyślne wartości w 'wyglądzie'
+          - obsługujący podgląd na żywo
+- funkcja `pdf_metryczka_check_options()` aktualizuje ustawienia przy każdym załadowaniu ustawień
 
 ## includes/metryczkaFormatowani.php
 Funkcje formatujące daty, wymuszanie poprawnego formatu dat w polach tekstowych, przekształcanie skróconego URL na pełny itd.
