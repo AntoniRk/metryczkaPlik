@@ -51,16 +51,18 @@ function check_pdf_links()
         <script>
             var enableExtendedDetection = <?php echo $enable_extended_detection ? 'true' : 'false'; ?>;
             var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
-            var excludedElements = <?php
-                                    $elements = array_filter(array_map('trim', explode(',', $excluded_elements)));
-                                    // Dodaj domyślne elementy do wykluczenia (do usunięcia?)
-                                    $elements = array_merge($elements, ['header', '.header', '#header', 'footer', '.footer', '#footer']);
-                                    echo json_encode($elements);
-                                    ?>;
+            var excludedElements = 
+            <?php
+                $elements = array_filter(array_map('trim', explode(',', $excluded_elements)));
+                // Dodaj domyślne elementy do wykluczenia (do usunięcia?)
+                $elements = array_merge($elements, ['header', '.header', '#header', 'footer', '.footer', '#footer']);
+                echo json_encode($elements);
+            ?>;
 
-            var excludedClasses = <?php
-                                    echo json_encode(array_filter(array_map('trim', explode(',', $excluded_classes))));
-                                    ?>;
+            var excludedClasses = 
+            <?php
+                echo json_encode(array_filter(array_map('trim', explode(',', $excluded_classes))));
+            ?>;
 
             var debugMode = <?php echo isset($options['debug_mode']) && $options['debug_mode'] ? 'true' : 'false'; ?>;
 
@@ -76,7 +78,7 @@ function check_pdf_links()
                         return dateStr || 'Nieznana';
                     }
 
-                    // Formatowanie daty DD-MM-YYYY
+                    // Formatowanie daty DD-MM-RRRR
                     const day = String(date.getDate()).padStart(2, '0');
                     const month = String(date.getMonth() + 1).padStart(2, '0');
                     const year = date.getFullYear();
@@ -100,7 +102,7 @@ function check_pdf_links()
                         return dateStr || 'Nieznana';
                     }
 
-                    // Formatowanie daty DD-MM-YYYY HH:MM
+                    // Formatowanie daty DD-MM-RRRR GG:MM
                     const day = String(date.getDate()).padStart(2, '0');
                     const month = String(date.getMonth() + 1).padStart(2, '0');
                     const year = date.getFullYear();

@@ -13,7 +13,7 @@ Pobierz ZIP, następnie w WordPress wybierz opcję **Wtyczki > Dodaj wtyczkę**,
 Alternatywnie rozpakowany folder z wtyczką wrzuć w pliki serwera:  
 *nazwa_wordpressa/wp-content/plugins*
 
-## Dokumentacja (JESZCZE SIĘ POZMIENIA)
+## Dokumentacja (jeszcze nie koniec)
 
 ```
 METRYCZKAPLIK/
@@ -48,6 +48,63 @@ polega na wczytaniu wszystkich odnośników zawartych w elemencie `<a>` na stron
    → Dodanie ikony obok linku, ikona wywołuje modal  
 4. Inaczej (pozostałe przypadki)  
    → Dodanie ikony pod linkiem, ikona wywołuje modal  
+
+- funkcja `check_pdf_links()`
+   - sprawdza, czy jest włączone sprawdzanie odnośników
+   - wczytuje wymagane technologie
+   - wczytuje zapisane ustawienia i wygląd
+   - DO USUNIĘCIA / KONTROLI admin-ajax.php
+   - funkcja `formatDateDMY(dateStr)` konwertuje datę do obiektu Date i formatuje DD-MM-RRRR
+   - funkcja `formatDateDMYHM(dateStr)` konwertuje datę do obiektu Date i formatuje DD-MM-RRRR GG:MM
+   - funkcja `incrementDownloads(url)` aktualizuje ilość pobrań po kliknięciu w odnośnik z plikiem
+   - rozszerzone wykrywanie (jeśli włączone w ustawieniach) polega na wykonaniu serii dłużej zajmujących sprawdzeń czy z drugiej strony odnośnika jest plik
+   - funkcja ` isFileLink(link)` sprawdza czy odnośnik to plik, podstawowe wykrywanie, lub rozszerzone
+   - pobranie wszystkich elementów `<a>`
+   - przeskanowanie wszystkich elementów `<a>` funkcją ` isFileLink(link)` z wyłączeniem wykluczeń
+   - stworzenie odpowiednich metryczek dla odnośników z plikiem
+      - `<a>` z klasą '.mn-document-download'
+         - stworzenie przycisku do wyświetlenia metryczki obok `<a>`
+         - funkcja `toggleMetadataContainer($container, show)` do możliwie jak najpłynniejszego pokazywania metryczki
+         - obsługa kliknięcia przycisku 'Metryczka'
+            - pobranie danych o pliku
+            - wyświetlenie danych w tabeli
+         - obsługa kliknięcia przycisku 'Pobierz'
+            - wywołanie funkcji `incrementDownloads` zwiększając ilość pobrań
+      - sprawdzenie rozmiaru kontenera
+         - kontener większy od 400 pikseli
+            - pobranie treści oryginalnego linku
+            - dodanie przycisku 'Metryczka'
+            - obsługa przycisku
+               - zanim dane zostaną wczytane pokaż 'Wczytywanie danych'
+               - zapytanie o dane za pomocą ajax
+               - wyświetlenie tabeli z danymi, lub błąd pobierania
+            - obsługa kliknięcia odnośnika
+               - wywołanie funkcji `incrementDownloads` zwiększając ilość pobrań
+         - kontener większy, lub równy 300 pikseli
+            - kopia treści oryginalnego linku
+            - przycisk w stylu ikona obok odnośnika
+            - zastąpienie oryginalny link kontenerem
+            - obsługa kliknięcia ikony
+               - pobranie danych pliku
+               - wyświetla się okno 'modal' z tabelką z danymi
+               - obsługa kliknięcia odnośnika
+                  - inkrementacja ilości pobrań
+         - kontener mniejszy od 300 pikseli
+            - kopia treści oryginalnego linku
+            - przycisk w stylu ikona pod odnośnika
+            - zastąpienie oryginalny link kontenerem
+            - obsługa kliknięcia ikony
+               - pobranie danych pliku
+               - wyświetla się okno 'modal' z tabelką z danymi
+               - obsługa kliknięcia odnośnika
+                  - inkrementacja ilości pobrań
+   - obsługa kliknięcia w ikonę
+   - obsługa kliknięcia w plik
+   - obsługa zamknięcia modalu
+   - struktura modalu
+- funkcja `get_pdf_data()` pobiera metadane pliku zapisane w WordPress
+- funkcja `increment_downloads()` przeszukuje metadane pliku i zwiększa ilość pobrań
+- funkcja `pdf_metryczka_uninstall()` usuwa opcje wtyczki, ale zachowuje metadane plików
 
 ## includes/metryczkaAdmin.php
 Ustawienia > Metryczki załączników
