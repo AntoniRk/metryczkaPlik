@@ -92,7 +92,20 @@ Jeden wielki formularz, który decyduje o sposobach wykrywania plików, wyklucze
 
 ## includes/metryczkaFormatowani.php
 Funkcje formatujące daty, wymuszanie poprawnego formatu dat w polach tekstowych, przekształcanie skróconego URL na pełny itd.
+
+- funkcja `pdf_metryczka_format_date()` zwraca wprowadzoną datę w formacie RRRR-MM-DD 00:00:00, lub aktualną jeśli nie podano daty
+- funkcja `pdf_metryczka_format_display_date()` zwraca datę w formacie DD-MM-RRRR, lub 'Nieznana'
+- funkcja `pdf_metryczka_normalize_url()` jeśli adres pliku zaczyna się od '/' to dodaje prefix podany w ustawieniach przed '/'
+- funkcja `function pdf_metryczka_sanitize_options($input)` upraszcza opcje pobrane z ustawnień
+- funkcja `add_pdf_date_formatting_script()` tworzy skrypt jQuery do formatowania daty
+
 ## includes/metryczkaMedia.php
 Obsługa zakładki Media, dodanie nowych pól w widoku edycji plików, obsługa metadanych
+
+- funkcja `pdf_metryczka_attachment_fields($form_fields, $post)` dodaje pola 'Wytworzył' i 'Data wytworzenia' do edycji plików w zakładce Media.
+- funkcja `pdf_metryczka_attachment_fields_save($post, $attachment)` pobiera wartość pól 'Wytworzył' i 'Data wytworzenia', formatuje daty, aktualizuje te dane w metadanych i tworzy licznik pobrań, jeśli jeszcze nie istnieje
+
 ## includes/metryczkaWyglad.php
 Domyślny wygląd metryczek, ważne przy pierwszej instalacji wtyczki, lub po wciśnięciu przycisku 'Resetuj' w Ustawieniach
+
+- funkcja `pdf_metryczka_default_options()` zawiera wszystkie domyślne style wykorzystywane przy pierwszym uruchomieniu, lub po wciśnięciu przycisków 'Resetuj' w zakładce 'Style i wygląd' w ustawieniach wtyczki
