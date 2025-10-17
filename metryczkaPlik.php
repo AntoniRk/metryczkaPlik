@@ -73,8 +73,6 @@ function check_pdf_links()
             var excludedElements =
                 <?php
                 $elements = array_filter(array_map('trim', explode(',', $excluded_elements)));
-                // Dodaj domyślne elementy do wykluczenia (do usunięcia?)
-                $elements = array_merge($elements, ['header', '.header', '#header', 'footer', '.footer', '#footer']);
                 echo json_encode($elements);
                 ?>;
 
@@ -254,12 +252,6 @@ function check_pdf_links()
                     if (!isInDocumentDownload && !isExcluded) {
                         // Sprawdź czy link jest w header lub footer
                         const $link = $(link);
-                        const isInHeader = $link.closest('header, .header, #header').length > 0;
-                        const isInFooter = $link.closest('footer, .footer, #footer').length > 0;
-
-                        if (isInHeader || isInFooter) {
-                            isExcluded = true;
-                        }
 
                         // Sprawdź wykluczenia elementów
                         if (!isExcluded && excludedElements && excludedElements.length > 0) {
