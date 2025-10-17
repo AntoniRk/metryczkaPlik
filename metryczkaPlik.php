@@ -257,7 +257,7 @@ function check_pdf_links()
                         if (!isExcluded && excludedElements && excludedElements.length > 0) {
                             for (let i = 0; i < excludedElements.length; i++) {
                                 const element = excludedElements[i].trim();
-                                if (element && $link.closest(element).length > 0) {
+                                if (element && $link.parents(element).length > 0) {
                                     isExcluded = true;
                                     break;
                                 }
@@ -270,7 +270,7 @@ function check_pdf_links()
                                 const className = excludedClasses[i].trim();
                                 if (className) {
                                     // Sprawdź czy link ma wykluczoną klasę lub znajduje się w elemencie z wykluczoną klasą
-                                    if ($link.hasClass(className) || $link.closest('.' + className).length > 0) {
+                                    if ($link.hasClass(className) || $link.parents('.' + className).length > 0) {
                                         isExcluded = true;
                                         break;
                                     }
