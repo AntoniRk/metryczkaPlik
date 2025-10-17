@@ -61,8 +61,7 @@ function pdf_metryczka_sanitize_options($input)
     $output['table_css'] = wp_strip_all_tags($input['table_css']);
     $output['excluded_elements'] = sanitize_text_field($input['excluded_elements']);
     $output['excluded_classes'] = sanitize_text_field($input['excluded_classes']);
-    $output['url_prefix'] = esc_url_raw($input['url_prefix']);
-
+    $output['url_prefix'] = !empty($input['url_prefix']) ? esc_url_raw($input['url_prefix']) : '';
     return $output;
 }
 

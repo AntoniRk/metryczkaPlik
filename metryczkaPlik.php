@@ -40,6 +40,7 @@ function check_pdf_links()
         $excluded_elements = isset($options['excluded_elements']) ? $options['excluded_elements'] : '';
         $excluded_classes = isset($options['excluded_classes']) ? $options['excluded_classes'] : '';
         $enable_extended_detection = isset($options['enable_extended_detection']) ? $options['enable_extended_detection'] : 1;
+        $url_prefix = isset($options['url_prefix']) ? $options['url_prefix'] : '';
 ?>
         <style>
             <?php echo $button_css; ?><?php if (!$display_icon): ?>.fa-info-circle {
@@ -49,8 +50,8 @@ function check_pdf_links()
             <?php endif; ?><?php echo $modal_css; ?><?php echo $table_css; ?>
         </style>
         <script>
-            var enableExtendedDetection = <?php echo $enable_extended_detection ? 'true' : 'false'; ?>;
             var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
+            var urlPrefix = '<?php echo esc_js($url_prefix); ?>';
             var excludedElements =
                 <?php
                 $elements = array_filter(array_map('trim', explode(',', $excluded_elements)));
@@ -168,12 +169,22 @@ function check_pdf_links()
                 function isFileLink(link) {
                     const href = link.href.toLowerCase();
 
+                    // tutaj mocne uproszczenie, zakładam, że każdy plik bez adresu przed /wp-content/uploads/ jest wewnętrzny
+                    if (href.includes('/wp-content/uploads/')) {
+                        const uploadIndex = href.indexOf('/wp-content/uploads/');
+                        if (uploadIndex > 0) {
+                            const beforeUpload = href.substring(0, uploadIndex);
+                            const prefixCheck = urlPrefix.toLowerCase();
+                            if (!beforeUpload.startsWith(prefixCheck)) {
+                                return false;
+                            }
+                        }
+                        return true;
+                    }
+
                     // Rozszerzenia plików
                     const fileExtRegex = /\.(pdf|doc|docx|xls|xlsx|ppt|pptx|txt|csv|zip|rar|gz|tar|7z|odt|ods|odp|jpg|jpeg|png|gif|bmp|svg|webp|mp3|mp4|wav|avi|mov|wmv)([?#].*)?$/i;
                     if (fileExtRegex.test(href)) return true;
-
-                    // WordPress uploads (99.9%)
-                    if (href.includes('/wp-content/uploads/')) return true;
 
                     // Parametry WordPress
                     if (href.includes('attachment_id=') || href.includes('download=')) return true;
