@@ -733,55 +733,6 @@ function check_pdf_links()
                     }
                 });
 
-                // Obsługa kliknięcia na ikonę
-                $(document).on('click', '.fa-info-circle', function(e) {
-                    e.stopPropagation();
-                    const url = this.parentNode.dataset.url;
-                    const title = this.parentNode.querySelector('.pdf-link-text').textContent;
-
-                    $.post(ajaxurl, {
-                        action: 'get_pdf_data',
-                        url: url,
-                        title: title
-                    }, function(data) {
-                        $('#pdfTitle').html(`<a href="${url}" target="_blank" onclick="incrementDownloads('${url}')">${title}</a>`);
-                        $('#pdfDetails').html(() => {
-                            let tableHTML = `
-                                            <table class="table">
-                                                <tr>
-                                                    <td>Wytworzył:</td>
-                                                    <td>${data.autor}</td>
-                                                    <td>Data wytworzenia:</td>
-                                                    <td>${formatDateDMY(data.data_wytworzenia)}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Opublikowano przez:</td>
-                                                    <td>${data.publikator}</td>
-                                                    <td>Data publikacji:</td>
-                                                    <td>${formatDateDMYHM(data.data_publikacji)}</td>
-                                                </t>`;
-                            if (data.zaktualizowal && data.data_aktualizacji) {
-                                tableHTML += `
-                                                <tr>
-                                                    <td>Zaktualizował:</td>
-                                                    <td>${data.zaktualizowal}</td>
-                                                    <td>Data aktualizacji:</td>
-                                                    <td>${formatDateDMYHM(data.data_aktualizacji)}</td>
-                                                </tr>`;
-                            }
-
-                            tableHTML += `
-                                                <tr>
-                                                    <td>Liczba pobrań:</td>
-                                                    <td id="liczba_pobran" colspan="3">${data.liczba_pobran || '0'}</td>
-                                                </tr>
-                                            </table>`;
-                            return tableHTML;
-                        });
-                        $('#pdfModal').modal('show');
-                    });
-                });
-
                 // Obsługa kliknięcia na link PDF
                 $(document).on('click', '.pdf-link', function(e) {
                     if (!$(e.target).hasClass('fa-info-circle')) {
