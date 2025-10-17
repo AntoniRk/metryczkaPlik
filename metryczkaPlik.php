@@ -637,16 +637,16 @@ function check_pdf_links()
                                                 <td>Data publikacji:</td>
                                                 <td>${formatDateDMYHM(data.data_publikacji) || 'Brak danych'}</td>
                                             </tr>`;
-                                                                if (data.zaktualizowal && data.data_aktualizacji) {
-                                                                    tableHTML += `
+                                    if (data.zaktualizowal && data.data_aktualizacji) {
+                                        tableHTML += `
                                             <tr>
                                                 <td>Zaktualizował:</td>
                                                 <td>${data.zaktualizowal}</td>
                                                 <td>Data aktualizacji:</td>
                                                 <td>${formatDateDMYHM(data.data_aktualizacji)}</td>
                                             </tr>`;
-                                                                }
-                                                                tableHTML += `
+                                    }
+                                    tableHTML += `
                                             <tr>
                                                 <td>Liczba pobrań:</td>
                                                 <td id="liczba_pobran" colspan="3">${data.liczba_pobran || '0'}</td>
