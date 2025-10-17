@@ -595,10 +595,8 @@ function check_pdf_links()
                                 const url = this.dataset.url;
                                 const title = this.dataset.title;
 
-                                // Pokaż modal z loaderem
                                 $('#pdfDetails').html('<div class="loading">Ładowanie metadanych...</div>');
                                 $('#pdfTitle').html(title);
-                                $('#pdfModal').modal('show');
 
                                 $.post(ajaxurl, {
                                     action: 'get_pdf_data',
@@ -606,46 +604,44 @@ function check_pdf_links()
                                     title: title
                                 }, function(data) {
                                     if (!data || !data.attachment_id) {
-                                        // Nie jest plikiem WordPress - UKRYJ MODAL
                                         $('#pdfModal').modal('hide');
                                         iconSpan.style.display = 'none';
                                         return;
                                     }
 
-                                    // Jest plikiem - pokaż dane
                                     $('#pdfTitle').html(`<a href="${url}" target="_blank" onclick="incrementDownloads('${url}')">${title}</a>`);
-
                                     let tableHTML = `
-                                        <table class="table">
-                                            <tr>
-                                                <td>Wytworzył:</td>
-                                                <td>${data.autor || 'Brak danych'}</td>
-                                                <td>Data wytworzenia:</td>
-                                                <td>${formatDateDMY(data.data_wytworzenia) || 'Brak danych'}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Opublikowano przez:</td>
-                                                <td>${data.publikator || 'Brak danych'}</td>
-                                                <td>Data publikacji:</td>
-                                                <td>${formatDateDMYHM(data.data_publikacji) || 'Brak danych'}</td>
-                                            </tr>`;
+            <table class="table">
+                <tr>
+                    <td>Wytworzył:</td>
+                    <td>${data.autor || 'Brak danych'}</td>
+                    <td>Data wytworzenia:</td>
+                    <td>${formatDateDMY(data.data_wytworzenia) || 'Brak danych'}</td>
+                </tr>
+                <tr>
+                    <td>Opublikowano przez:</td>
+                    <td>${data.publikator || 'Brak danych'}</td>
+                    <td>Data publikacji:</td>
+                    <td>${formatDateDMYHM(data.data_publikacji) || 'Brak danych'}</td>
+                </tr>`;
                                     if (data.zaktualizowal && data.data_aktualizacji) {
                                         tableHTML += `
-                                            <tr>
-                                                <td>Zaktualizował:</td>
-                                                <td>${data.zaktualizowal}</td>
-                                                <td>Data aktualizacji:</td>
-                                                <td>${formatDateDMYHM(data.data_aktualizacji)}</td>
-                                            </tr>`;
+                <tr>
+                    <td>Zaktualizował:</td>
+                    <td>${data.zaktualizowal}</td>
+                    <td>Data aktualizacji:</td>
+                    <td>${formatDateDMYHM(data.data_aktualizacji)}</td>
+                </tr>`;
                                     }
                                     tableHTML += `
-                                            <tr>
-                                                <td>Liczba pobrań:</td>
-                                                <td id="liczba_pobran" colspan="3">${data.liczba_pobran || '0'}</td>
-                                            </tr>
-                                        </table>`;
+                <tr>
+                    <td>Liczba pobrań:</td>
+                    <td id="liczba_pobran" colspan="3">${data.liczba_pobran || '0'}</td>
+                </tr>
+            </table>`;
 
                                     $('#pdfDetails').html(tableHTML);
+                                    $('#pdfModal').modal('show');
                                 }).fail(function() {
                                     $('#pdfModal').modal('hide');
                                     iconSpan.style.display = 'none';
@@ -691,10 +687,8 @@ function check_pdf_links()
                                 const url = this.dataset.url;
                                 const title = this.dataset.title;
 
-                                // Pokaż modal z loaderem
                                 $('#pdfDetails').html('<div class="loading">Ładowanie metadanych...</div>');
                                 $('#pdfTitle').html(title);
-                                $('#pdfModal').modal('show');
 
                                 $.post(ajaxurl, {
                                     action: 'get_pdf_data',
@@ -702,46 +696,44 @@ function check_pdf_links()
                                     title: title
                                 }, function(data) {
                                     if (!data || !data.attachment_id) {
-                                        // Nie jest plikiem WordPress - UKRYJ MODAL
                                         $('#pdfModal').modal('hide');
                                         iconSpan.style.display = 'none';
                                         return;
                                     }
 
                                     $('#pdfTitle').html(`<a href="${url}" target="_blank" onclick="incrementDownloads('${url}')">${title}</a>`);
-
                                     let tableHTML = `
-                                        <table class="table">
-                                            <tr>
-                                                <td>Wytworzył:</td>
-                                                <td>${data.autor || 'Brak danych'}</td>
-                                                <td>Data wytworzenia:</td>
-                                                <td>${formatDateDMY(data.data_wytworzenia) || 'Brak danych'}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Opublikowano przez:</td>
-                                                <td>${data.publikator || 'Brak danych'}</td>
-                                                <td>Data publikacji:</td>
-                                                <td>${formatDateDMYHM(data.data_publikacji) || 'Brak danych'}</td>
-                                            </tr>`;
-                                                                if (data.zaktualizowal && data.data_aktualizacji) {
-                                                                    tableHTML += `
-                                            <tr>
-                                                <td>Zaktualizował:</td>
-                                                <td>${data.zaktualizowal}</td>
-                                                <td>Data aktualizacji:</td>
-                                                <td>${formatDateDMYHM(data.data_aktualizacji)}</td>
-                                            </tr>`;
-                                                                }
-                                                                tableHTML += `
-                                            <tr>
-                                                <td>Liczba pobrań:</td>
-                                                <td id="liczba_pobran" colspan="3">${data.liczba_pobran || '0'}</td>
-                                            </tr>
-                                        </table>`;
+            <table class="table">
+                <tr>
+                    <td>Wytworzył:</td>
+                    <td>${data.autor || 'Brak danych'}</td>
+                    <td>Data wytworzenia:</td>
+                    <td>${formatDateDMY(data.data_wytworzenia) || 'Brak danych'}</td>
+                </tr>
+                <tr>
+                    <td>Opublikowano przez:</td>
+                    <td>${data.publikator || 'Brak danych'}</td>
+                    <td>Data publikacji:</td>
+                    <td>${formatDateDMYHM(data.data_publikacji) || 'Brak danych'}</td>
+                </tr>`;
+                                    if (data.zaktualizowal && data.data_aktualizacji) {
+                                        tableHTML += `
+                <tr>
+                    <td>Zaktualizował:</td>
+                    <td>${data.zaktualizowal}</td>
+                    <td>Data aktualizacji:</td>
+                    <td>${formatDateDMYHM(data.data_aktualizacji)}</td>
+                </tr>`;
+                                    }
+                                    tableHTML += `
+                <tr>
+                    <td>Liczba pobrań:</td>
+                    <td id="liczba_pobran" colspan="3">${data.liczba_pobran || '0'}</td>
+                </tr>
+            </table>`;
 
                                     $('#pdfDetails').html(tableHTML);
-                                    // Modal jest już pokazany
+                                    $('#pdfModal').modal('show');
                                 }).fail(function() {
                                     $('#pdfModal').modal('hide');
                                     iconSpan.style.display = 'none';
