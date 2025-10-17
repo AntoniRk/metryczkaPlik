@@ -52,6 +52,24 @@ function check_pdf_links()
         <script>
             var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
             var urlPrefix = '<?php echo esc_js($url_prefix); ?>';
+            // Normalizuj urlPrefix - usuń protokół i trailing slash
+            function normalizePrefix(prefix) {
+                if (!prefix) return '';
+
+                // Usuń białe znaki
+                prefix = prefix.trim();
+
+                // Usuń protokół (http://, https://)
+                prefix = prefix.replace(/^https?:\/\//, '');
+
+                // Usuń trailing slash
+                prefix = prefix.replace(/\/$/, '');
+                prefix = prefix.toLowerCase();
+
+                return prefix;
+            }
+
+            var normalizedUrlPrefix = normalizePrefix(urlPrefix);
             var excludedElements =
                 <?php
                 $elements = array_filter(array_map('trim', explode(',', $excluded_elements)));
@@ -174,8 +192,11 @@ function check_pdf_links()
                         const uploadIndex = href.indexOf('/wp-content/uploads/');
                         if (uploadIndex > 0) {
                             const beforeUpload = href.substring(0, uploadIndex);
-                            const prefixCheck = urlPrefix.toLowerCase();
-                            if (!beforeUpload.startsWith(prefixCheck)) {
+
+                            // Normalizuj obie wartości do porównania
+                            const normalizedBeforeUpload = normalizePrefix(beforeUpload);
+
+                            if (normalizedUrlPrefix && !normalizedBeforeUpload.includes(normalizedUrlPrefix)) {
                                 return false;
                             }
                         }
@@ -593,13 +614,9 @@ function check_pdf_links()
                                     title: title
                                 }, function(data) {
                                     if (!data || !data.attachment_id) {
-                                        // Nie jest plikiem WordPress
-                                        $('#pdfDetails').html('<div class="error">Ten link nie prowadzi do pliku w systemie.</div>');
-                                        setTimeout(function() {
-                                            $('#pdfModal').modal('hide');
-                                            // Ukryj ikonę
-                                            iconSpan.style.display = 'none';
-                                        }, 2000);
+                                        // Nie jest plikiem WordPress - UKRYJ MODAL
+                                        $('#pdfModal').modal('hide');
+                                        iconSpan.style.display = 'none';
                                         return;
                                     }
 
@@ -610,26 +627,26 @@ function check_pdf_links()
                                         <table class="table">
                                             <tr>
                                                 <td>Wytworzył:</td>
-                                                <td>${data.autor}</td>
+                                                <td>${data.autor || 'Brak danych'}</td>
                                                 <td>Data wytworzenia:</td>
-                                                <td>${formatDateDMY(data.data_wytworzenia)}</td>
+                                                <td>${formatDateDMY(data.data_wytworzenia) || 'Brak danych'}</td>
                                             </tr>
                                             <tr>
                                                 <td>Opublikowano przez:</td>
-                                                <td>${data.publikator}</td>
+                                                <td>${data.publikator || 'Brak danych'}</td>
                                                 <td>Data publikacji:</td>
-                                                <td>${formatDateDMYHM(data.data_publikacji)}</td>
+                                                <td>${formatDateDMYHM(data.data_publikacji) || 'Brak danych'}</td>
                                             </tr>`;
-                                    if (data.zaktualizowal && data.data_aktualizacji) {
-                                        tableHTML += `
+                                                                if (data.zaktualizowal && data.data_aktualizacji) {
+                                                                    tableHTML += `
                                             <tr>
                                                 <td>Zaktualizował:</td>
                                                 <td>${data.zaktualizowal}</td>
                                                 <td>Data aktualizacji:</td>
                                                 <td>${formatDateDMYHM(data.data_aktualizacji)}</td>
                                             </tr>`;
-                                    }
-                                    tableHTML += `
+                                                                }
+                                                                tableHTML += `
                                             <tr>
                                                 <td>Liczba pobrań:</td>
                                                 <td id="liczba_pobran" colspan="3">${data.liczba_pobran || '0'}</td>
@@ -638,10 +655,10 @@ function check_pdf_links()
 
                                     $('#pdfDetails').html(tableHTML);
                                 }).fail(function() {
-                                    $('#pdfDetails').html('<div class="error">Błąd podczas pobierania metadanych</div>');
+                                    $('#pdfModal').modal('hide');
+                                    iconSpan.style.display = 'none';
                                 });
                             });
-
                             // Obsługa kliknięcia linku
                             linkClone.addEventListener('click', function(e) {
                                 incrementDownloads(linkClone.href);
@@ -682,46 +699,60 @@ function check_pdf_links()
                                 const url = this.dataset.url;
                                 const title = this.dataset.title;
 
+                                // Pokaż modal z loaderem
+                                $('#pdfDetails').html('<div class="loading">Ładowanie metadanych...</div>');
+                                $('#pdfTitle').html(title);
+                                $('#pdfModal').modal('show');
+
                                 $.post(ajaxurl, {
                                     action: 'get_pdf_data',
                                     url: url,
                                     title: title
                                 }, function(data) {
-                                    $('#pdfTitle').html(`<a href="${url}" target="_blank" onclick="incrementDownloads('${url}')">${title}</a>`);
-                                    $('#pdfDetails').html(() => {
-                                        let tableHTML = `
-                                            <table class="table">
-                                                <tr>
-                                                    <td>Wytworzył:</td>
-                                                    <td>${data.autor}</td>
-                                                    <td>Data wytworzenia:</td>
-                                                    <td>${formatDateDMY(data.data_wytworzenia)}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Opublikowano przez:</td>
-                                                    <td>${data.publikator}</td>
-                                                    <td>Data publikacji:</td>
-                                                    <td>${formatDateDMYHM(data.data_publikacji)}</td>
-                                                </t>`;
-                                        if (data.zaktualizowal && data.data_aktualizacji) {
-                                            tableHTML += `
-                                                <tr>
-                                                    <td>Zaktualizował:</td>
-                                                    <td>${data.zaktualizowal}</td>
-                                                    <td>Data aktualizacji:</td>
-                                                    <td>${formatDateDMYHM(data.data_aktualizacji)}</td>
-                                                </tr>`;
-                                        }
+                                    if (!data || !data.attachment_id) {
+                                        // Nie jest plikiem WordPress - UKRYJ MODAL
+                                        $('#pdfModal').modal('hide');
+                                        iconSpan.style.display = 'none';
+                                        return;
+                                    }
 
-                                        tableHTML += `
-                                                <tr>
-                                                    <td>Liczba pobrań:</td>
-                                                    <td id="liczba_pobran" colspan="3">${data.liczba_pobran || '0'}</td>
-                                                </tr>
-                                            </table>`;
-                                        return tableHTML;
-                                    });
-                                    $('#pdfModal').modal('show');
+                                    $('#pdfTitle').html(`<a href="${url}" target="_blank" onclick="incrementDownloads('${url}')">${title}</a>`);
+
+                                    let tableHTML = `
+                                        <table class="table">
+                                            <tr>
+                                                <td>Wytworzył:</td>
+                                                <td>${data.autor || 'Brak danych'}</td>
+                                                <td>Data wytworzenia:</td>
+                                                <td>${formatDateDMY(data.data_wytworzenia) || 'Brak danych'}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Opublikowano przez:</td>
+                                                <td>${data.publikator || 'Brak danych'}</td>
+                                                <td>Data publikacji:</td>
+                                                <td>${formatDateDMYHM(data.data_publikacji) || 'Brak danych'}</td>
+                                            </tr>`;
+                                                                if (data.zaktualizowal && data.data_aktualizacji) {
+                                                                    tableHTML += `
+                                            <tr>
+                                                <td>Zaktualizował:</td>
+                                                <td>${data.zaktualizowal}</td>
+                                                <td>Data aktualizacji:</td>
+                                                <td>${formatDateDMYHM(data.data_aktualizacji)}</td>
+                                            </tr>`;
+                                                                }
+                                                                tableHTML += `
+                                            <tr>
+                                                <td>Liczba pobrań:</td>
+                                                <td id="liczba_pobran" colspan="3">${data.liczba_pobran || '0'}</td>
+                                            </tr>
+                                        </table>`;
+
+                                    $('#pdfDetails').html(tableHTML);
+                                    // Modal jest już pokazany
+                                }).fail(function() {
+                                    $('#pdfModal').modal('hide');
+                                    iconSpan.style.display = 'none';
                                 });
                             });
 
