@@ -36,6 +36,7 @@ function check_pdf_links()
         $button_css = isset($options['button_css']) ? $options['button_css'] : '';
         $modal_css = isset($options['modal_css']) ? $options['modal_css'] : '';
         $table_css = isset($options['table_css']) ? $options['table_css'] : '';
+        //$table_css += ".mn-document-download { flex-wrap: wrap; }";
         $display_icon = isset($options['display_icon']) ? $options['display_icon'] : 1;
         $excluded_elements = isset($options['excluded_elements']) ? $options['excluded_elements'] : '';
         $excluded_classes = isset($options['excluded_classes']) ? $options['excluded_classes'] : '';
@@ -320,6 +321,10 @@ function check_pdf_links()
                         metadataContainer.className = 'pdf-metadata-container';
                         metadataContainer.style.display = 'none';
                         metadataContainer.style.width = '100%';
+                        metadataContainer.style.clear = 'both';
+                        metadataContainer.style.marginTop = '10px';
+                        metadataContainer.style.flexBasis = '100%';
+                        metadataContainer.style.order = '999';
 
                         // Dodaj kontener na końcu .mn-document-download
                         $downloadContainer.append(metadataContainer);
@@ -611,34 +616,34 @@ function check_pdf_links()
 
                                     $('#pdfTitle').html(`<a href="${url}" target="_blank" onclick="incrementDownloads('${url}')">${title}</a>`);
                                     let tableHTML = `
-            <table class="table">
-                <tr>
-                    <td>Wytworzył:</td>
-                    <td>${data.autor || 'Brak danych'}</td>
-                    <td>Data wytworzenia:</td>
-                    <td>${formatDateDMY(data.data_wytworzenia) || 'Brak danych'}</td>
-                </tr>
-                <tr>
-                    <td>Opublikowano przez:</td>
-                    <td>${data.publikator || 'Brak danych'}</td>
-                    <td>Data publikacji:</td>
-                    <td>${formatDateDMYHM(data.data_publikacji) || 'Brak danych'}</td>
-                </tr>`;
+                                        <table class="table">
+                                            <tr>
+                                                <td>Wytworzył:</td>
+                                                <td>${data.autor || 'Brak danych'}</td>
+                                                <td>Data wytworzenia:</td>
+                                                <td>${formatDateDMY(data.data_wytworzenia) || 'Brak danych'}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Opublikowano przez:</td>
+                                                <td>${data.publikator || 'Brak danych'}</td>
+                                                <td>Data publikacji:</td>
+                                                <td>${formatDateDMYHM(data.data_publikacji) || 'Brak danych'}</td>
+                                            </tr>`;
                                     if (data.zaktualizowal && data.data_aktualizacji) {
                                         tableHTML += `
-                <tr>
-                    <td>Zaktualizował:</td>
-                    <td>${data.zaktualizowal}</td>
-                    <td>Data aktualizacji:</td>
-                    <td>${formatDateDMYHM(data.data_aktualizacji)}</td>
-                </tr>`;
+                                            <tr>
+                                                <td>Zaktualizował:</td>
+                                                <td>${data.zaktualizowal}</td>
+                                                <td>Data aktualizacji:</td>
+                                                <td>${formatDateDMYHM(data.data_aktualizacji)}</td>
+                                            </tr>`;
                                     }
                                     tableHTML += `
-                <tr>
-                    <td>Liczba pobrań:</td>
-                    <td id="liczba_pobran" colspan="3">${data.liczba_pobran || '0'}</td>
-                </tr>
-            </table>`;
+                                            <tr>
+                                                <td>Liczba pobrań:</td>
+                                                <td id="liczba_pobran" colspan="3">${data.liczba_pobran || '0'}</td>
+                                            </tr>
+                                        </table>`;
 
                                     $('#pdfDetails').html(tableHTML);
                                     $('#pdfModal').modal('show');
