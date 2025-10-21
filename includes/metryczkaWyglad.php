@@ -18,16 +18,16 @@ function pdf_metryczka_default_options()
 }
 
 .fa-info-circle {
-    color: #007bff !important;
+    color: #183557 !important;
     cursor: pointer !important;
     text-decoration: none !important;
 }
 
 .fa-info-circle:hover {
-    color: #0056b3 !important;
+    color: #007bff !important;
 }",
         'modal_css' => ".modal-content {
-    border: 2px solid #003c7d !important;
+    border: 2px solid #183557 !important;
     border-radius: 10px 40px 10px !important;
     margin: auto !important;
 }
@@ -68,13 +68,13 @@ function pdf_metryczka_default_options()
 }
 
 #pdfDetails table td {
-    border-top: 1px solid #003c7d !important; 
+    border-top: 1px solid #183557 !important; 
     padding: 4px 6px !important;
     font-size: 13px !important;
 }
 
 #pdfDetails table tr:last-child {
-    border-bottom: 1px solid #003c7d !important; 
+    border-bottom: 1px solid #183557 !important; 
 }
 
 #pdfDetails td {
@@ -107,7 +107,7 @@ function pdf_metryczka_default_options()
     margin-top: 10px !important;
     padding: 10px !important;
     background-color: #f8f9fa !important;
-    border: 2px solid #003c7d !important;
+    border: 2px solid #183557 !important;
     border-radius: 0px 0px 10px !important;
     transition: all 0.3s ease !important;
 }
@@ -119,7 +119,7 @@ function pdf_metryczka_default_options()
 
 .mn-metadata-table td {
     padding: 5px !important;
-    border-top: 1px solid #003c7d !important; 
+    border-top: 1px solid #183557 !important; 
 }
 
 .mn-metadata-table tr td:nth-child(even) {
@@ -131,7 +131,7 @@ function pdf_metryczka_default_options()
 }
 
 .mn-metadata-table tr:last-child {
-    border-bottom: 1px solid #003c7d !important; 
+    border-bottom: 1px solid #183557 !important; 
 }
 
 @media (max-width: 600px) {
