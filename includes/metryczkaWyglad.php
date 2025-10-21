@@ -108,7 +108,7 @@ function pdf_metryczka_default_options()
     padding: 10px !important;
     background-color: #f8f9fa !important;
     border: 2px solid #003c7d !important;
-    border-radius: 0px 10px 10px !important;
+    border-radius: 0px 0px 10px !important;
     transition: all 0.3s ease !important;
 }
 
