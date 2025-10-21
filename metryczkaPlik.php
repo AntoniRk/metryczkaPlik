@@ -3,7 +3,7 @@
 /*
 Plugin Name: Metryczki dla załączników
 Description: Automatycznie wykrywa linki do <strong>załączników</strong> i dodaje przycisk do wyświetlania ich <strong>metryczek</strong>. Nowe pola do wprowadzenia danych przy dodawaniu plików i edycji. 
-Version: 0.38
+Version: 1.0
 Author: Antoni Roskosz
 */
 
