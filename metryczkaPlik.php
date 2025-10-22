@@ -49,48 +49,7 @@ function check_pdf_links()
 
             <?php endif; ?><?php echo $modal_css; ?><?php echo $table_css; ?>
 
-            /* Style dla mn-document-download z flex-wrap */
-            .mn-document-download {
-                display: flex !important;
-                flex-wrap: wrap !important;
-                align-items: center !important;
-                gap: 10px !important;
-            }
-
-            .mn-document-download img {
-                order: 1 !important;
-                flex-shrink: 0 !important;
-            }
-
-            .mn-document-download .mn-document-name {
-                order: 2 !important;
-                flex: 1 1 auto !important;
-                min-width: 200px !important;
-            }
-
-            .mn-document-download .mn-document-desc {
-                order: 3 !important;
-                flex: 1 1 100% !important;
-            }
-
-            .mn-document-download .mn-document-metryczka {
-                order: 4 !important;
-                flex-shrink: 0 !important;
-                margin-left: auto !important;
-                margin-right: 10px !important;
-            }
-
-            .mn-document-download>a[target="_blank"]:not(.mn-document-metryczka) {
-                order: 5 !important;
-                flex-shrink: 0 !important;
-                margin-left: 0 !important;
-            }
-
-            .mn-document-download .pdf-metadata-container {
-                order: 999 !important;
-                flex-basis: 100% !important;
-                width: 100% !important;
-            }
+            
         </style>
         <script>
             var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
@@ -321,7 +280,7 @@ function check_pdf_links()
                         metrykaButton.className = 'mn-document-metryczka';
                         metrykaButton.textContent = 'Metryczka';
                         metrykaButton.style.cursor = 'pointer';
-                        metrykaButton.style.color = '#007bff';
+                        metrykaButton.style.color = '#183557';
                         metrykaButton.style.textDecoration = 'underline';
                         metrykaButton.style.marginRight = '10px';
                         metrykaButton.style.whiteSpace = 'nowrap';
@@ -477,7 +436,7 @@ function check_pdf_links()
                             metrykaButton.href = 'javascript:void(0)';
                             metrykaButton.className = 'pdf-metryczka-button';
                             metrykaButton.innerHTML = '<i class="fa-solid fa-info-circle" title="Metryczka"></i>';
-                            metrykaButton.style.color = '#007bff';
+                            metrykaButton.style.color = '#183557';
                             metrykaButton.style.cursor = 'pointer';
                             metrykaButton.style.textDecoration = 'none';
                             metrykaButton.style.textAlignLast = 'right';
@@ -595,7 +554,7 @@ function check_pdf_links()
                             iconSpan.className = 'pdf-icon-container';
                             iconSpan.style.cursor = 'pointer';
                             iconSpan.innerHTML = '<i class="fa-solid fa-info-circle" title="Metryczka"></i>';
-                            iconSpan.style.color = '#007bff';
+                            iconSpan.style.color = '#183557';
                             iconSpan.dataset.url = link.href;
                             iconSpan.dataset.title = link.textContent.trim();
 
@@ -691,7 +650,7 @@ function check_pdf_links()
                             iconSpan.style.cursor = 'pointer';
                             iconSpan.style.alignSelf = 'center';
                             iconSpan.innerHTML = '<i class="fa-solid fa-info-circle" title="Metryczka"></i>';
-                            iconSpan.style.color = '#007bff';
+                            iconSpan.style.color = '#183557';
                             iconSpan.dataset.url = link.href;
                             iconSpan.dataset.title = link.textContent.trim();
                             container.appendChild(linkClone);

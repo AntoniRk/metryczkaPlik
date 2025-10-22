@@ -134,6 +134,49 @@ function pdf_metryczka_default_options()
     border-bottom: 1px solid #183557 !important; 
 }
 
+/* Style dla mn-document-download z flex-wrap */
+.mn-document-download {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: 10px !important;
+}
+
+.mn-document-download img {
+    order: 1 !important;
+    flex-shrink: 0 !important;
+}
+
+.mn-document-download .mn-document-name {
+    order: 2 !important;
+    flex: 1 1 auto !important;
+    min-width: 200px !important;
+}
+
+.mn-document-download .mn-document-desc {
+    order: 3 !important;
+    flex: 1 1 100% !important;
+}
+
+.mn-document-download .mn-document-metryczka {
+    order: 4 !important;
+    flex-shrink: 0 !important;
+    margin-left: auto !important;
+    margin-right: 10px !important;
+}
+
+.mn-document-download>a[target='_blank']:not(.mn-document-metryczka) {
+    order: 5 !important;
+    flex-shrink: 0 !important;
+    margin-left: 0 !important;
+}
+
+.mn-document-download .pdf-metadata-container {
+    order: 999 !important;
+    flex-basis: 100% !important;
+    width: 100% !important;
+}
+
 @media (max-width: 600px) {
     .mn-document-metadata, .pdf-metadata-container {
         font-size: 14px !important;
@@ -158,7 +201,5 @@ function pdf_metryczka_default_options()
         'excluded_elements' => '',
         'excluded_classes' => 'mn-document-download',
         'url_prefix' => (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'], // Automatycznie pobierany z WordPress    
-        );
+    );
 }
-
-?>
