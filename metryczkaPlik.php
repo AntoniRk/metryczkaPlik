@@ -242,8 +242,6 @@ function check_pdf_links()
                         }
                         return true;
                     }
-
-
                 }
 
                 // Zmień sposób wybierania linków PDF
