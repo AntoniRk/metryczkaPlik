@@ -280,7 +280,7 @@ function check_pdf_links()
                         metrykaButton.className = 'mn-document-metryczka';
                         metrykaButton.textContent = 'Metryczka';
                         metrykaButton.style.cursor = 'pointer';
-                        metrykaButton.style.color = '#183557';
+                        metrykaButton.style.color = '#154C8D';
                         metrykaButton.style.textDecoration = 'underline';
                         metrykaButton.style.marginRight = '10px';
                         metrykaButton.style.whiteSpace = 'nowrap';
@@ -436,7 +436,7 @@ function check_pdf_links()
                             metrykaButton.href = 'javascript:void(0)';
                             metrykaButton.className = 'pdf-metryczka-button';
                             metrykaButton.innerHTML = '<i class="fa-solid fa-info-circle" title="Metryczka"></i>';
-                            metrykaButton.style.color = '#183557';
+                            metrykaButton.style.color = '#154C8D';
                             metrykaButton.style.cursor = 'pointer';
                             metrykaButton.style.textDecoration = 'none';
                             metrykaButton.style.textAlignLast = 'right';
@@ -554,7 +554,6 @@ function check_pdf_links()
                             iconSpan.className = 'pdf-icon-container';
                             iconSpan.style.cursor = 'pointer';
                             iconSpan.innerHTML = '<i class="fa-solid fa-info-circle" title="Metryczka"></i>';
-                            iconSpan.style.color = '#183557';
                             iconSpan.dataset.url = link.href;
                             iconSpan.dataset.title = link.textContent.trim();
 
@@ -650,7 +649,6 @@ function check_pdf_links()
                             iconSpan.style.cursor = 'pointer';
                             iconSpan.style.alignSelf = 'center';
                             iconSpan.innerHTML = '<i class="fa-solid fa-info-circle" title="Metryczka"></i>';
-                            iconSpan.style.color = '#183557';
                             iconSpan.dataset.url = link.href;
                             iconSpan.dataset.title = link.textContent.trim();
                             container.appendChild(linkClone);

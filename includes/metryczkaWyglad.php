@@ -13,12 +13,12 @@ function pdf_metryczka_default_options()
 }
 
 .pdf-link-text {
-    color: blue !important;
+    color: #154C8D !important;
     text-decoration: underline !important;
 }
 
 .fa-info-circle {
-    color: #183557 !important;
+    color: #154C8D !important;
     cursor: pointer !important;
     text-decoration: none !important;
 }
@@ -27,7 +27,7 @@ function pdf_metryczka_default_options()
     color: #007bff !important;
 }",
         'modal_css' => ".modal-content {
-    border: 2px solid #183557 !important;
+    border: 2px solid #154C8D !important;
     border-radius: 10px 40px 10px !important;
     margin: auto !important;
 }
@@ -68,13 +68,13 @@ function pdf_metryczka_default_options()
 }
 
 #pdfDetails table td {
-    border-top: 1px solid #183557 !important; 
+    border-top: 1px solid #154C8D !important; 
     padding: 4px 6px !important;
     font-size: 13px !important;
 }
 
 #pdfDetails table tr:last-child {
-    border-bottom: 1px solid #183557 !important; 
+    border-bottom: 1px solid #154C8D !important; 
 }
 
 #pdfDetails td {
@@ -107,7 +107,7 @@ function pdf_metryczka_default_options()
     margin-top: 10px !important;
     padding: 10px !important;
     background-color: #f8f9fa !important;
-    border: 2px solid #183557 !important;
+    border: 2px solid #154C8D !important;
     border-radius: 0px 0px 10px !important;
     transition: all 0.3s ease !important;
 }
@@ -119,7 +119,7 @@ function pdf_metryczka_default_options()
 
 .mn-metadata-table td {
     padding: 5px !important;
-    border-top: 1px solid #183557 !important; 
+    border-top: 1px solid #154C8D !important; 
 }
 
 .mn-metadata-table tr td:nth-child(even) {
@@ -131,7 +131,7 @@ function pdf_metryczka_default_options()
 }
 
 .mn-metadata-table tr:last-child {
-    border-bottom: 1px solid #183557 !important; 
+    border-bottom: 1px solid #154C8D !important; 
 }
 
 /* Style dla mn-document-download z flex-wrap */
