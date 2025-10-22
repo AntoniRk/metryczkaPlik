@@ -40,7 +40,7 @@ function pdf_metryczka_normalize_url($url)
 {
     if (substr($url, 0, 1) === '/' && substr($url, 0, 2) !== '//') {
         $options = get_option('pdf_metryczka_options');
-        $prefix = isset($options['url_prefix']) ? $options['url_prefix'] : site_url();
+        $prefix = isset($options['url_prefix']) ? $options['url_prefix'] : (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'];
         $prefix = rtrim($prefix, '/');
         return $prefix . $url;
     }

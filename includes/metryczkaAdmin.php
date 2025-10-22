@@ -25,8 +25,8 @@ function pdf_metryczka_add_help_tab()
         'id'      => 'pdf_metryczka_help_url_prefix',
         'title'   => 'Prefix URL',
         'content' => '<p><strong>Prefix URL</strong> - Ta opcja pozwala określić prefix, który będzie dodawany do względnych adresów URL plików (np. zaczynających się od "/"). Jest to szczególnie przydatne w środowiskach, gdzie ścieżki względne wymagają dodatkowego prefiksu, aby być poprawnie rozpoznawane przez system WordPress.</p>
-                     <p>Domyślna wartość to <code>https://bip.polsl.pl</code>, ale możesz ją zmienić zgodnie z konfiguracją swojej witryny.</p>
-                     <p>Przykład: Jeśli masz link do pliku <code>/wp-content/uploads/2023/01/dokument.pdf</code>, wtyczka automatycznie przekształci go na <code>https://bip.polsl.pl/wp-content/uploads/2023/01/dokument.pdf</code> podczas próby identyfikacji załącznika.</p>'
+                     <p>Domyślna wartość jest automatycznie pobierana z adresu Twojej witryny WordPress, ale możesz ją zmienić zgodnie z konfiguracją swojej witryny.</p>
+                     <p>Przykład: Jeśli masz link do pliku <code>/wp-content/uploads/2023/01/dokument.pdf</code>, wtyczka automatycznie przekształci go na <code>' . (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'] . '/wp-content/uploads/2023/01/dokument.pdf</code> podczas próby identyfikacji załącznika.</p>'
     ));
 }
 add_action('admin_head', 'pdf_metryczka_add_help_tab');
@@ -191,8 +191,8 @@ function pdf_metryczka_settings_page()
                     <tr valign="top">
                         <th scope="row">Prefix URL</th>
                         <td>
-                            <input type="text" name="pdf_metryczka_options[url_prefix]" class="regular-text" value="<?php echo esc_attr($options['url_prefix']); ?>" />
-                            <p class="description">Prefix dodawany do względnych adresów URL (np. zaczynających się od "/"). Przydatne w środowiskach, gdzie ścieżki bezwzględne wymagają dodatkowego prefiksu.</p>
+                            <input type="text" name="pdf_metryczka_options[url_prefix]" class="regular-text" value="<?php echo esc_attr($options['url_prefix']); ?>" placeholder="<?php echo esc_attr((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST']); ?>" />
+                            <p class="description">Prefix dodawany do względnych adresów URL (np. zaczynających się od "/"). Domyślnie: <strong><?php echo esc_html((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST']); ?></strong></p>
                         </td>
                     </tr>
                 </table>

@@ -157,8 +157,8 @@ function pdf_metryczka_default_options()
 }",
         'excluded_elements' => '',
         'excluded_classes' => 'mn-document-download',
-        'url_prefix' => 'https://bip.polsl.pl'
-    );
+        'url_prefix' => (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'], // Automatycznie pobierany z WordPress    
+        );
 }
 
 ?>

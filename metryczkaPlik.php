@@ -228,52 +228,28 @@ function check_pdf_links()
 
                 function isFileLink(link) {
                     const href = link.href.toLowerCase();
+                    console.log('Sprawdzanie linku:', href);
 
                     // tutaj mocne uproszczenie, zakładam, że każdy plik bez adresu przed /wp-content/uploads/ jest wewnętrzny
                     if (href.includes('/wp-content/uploads/')) {
                         const uploadIndex = href.indexOf('/wp-content/uploads/');
+                        console.log('Index /wp-content/uploads/:', uploadIndex);
                         if (uploadIndex > 0) {
                             const beforeUpload = href.substring(0, uploadIndex);
-
+                            console.log('Część przed /wp-content/uploads/:', beforeUpload);
                             // Normalizuj obie wartości do porównania
                             const normalizedBeforeUpload = normalizePrefix(beforeUpload);
-
+                            console.log('Znormalizowana część przed /wp-content/uploads/:', normalizedBeforeUpload);
                             if (normalizedUrlPrefix && !normalizedBeforeUpload.includes(normalizedUrlPrefix)) {
+                                console.log('Link odrzucony - nie pasuje do prefiksu URL.');
                                 return false;
                             }
                         }
+                        console.log('Link zawiera /wp-content/uploads/, traktowany jako plik.');
                         return true;
                     }
 
-                    // Rozszerzenia plików
-                    const fileExtRegex = /\.(pdf|doc|docx|xls|xlsx|ppt|pptx|txt|csv|zip|rar|gz|tar|7z|odt|ods|odp|jpg|jpeg|png|gif|bmp|svg|webp|mp3|mp4|wav|avi|mov|wmv)([?#].*)?$/i;
-                    if (fileExtRegex.test(href)) return true;
 
-                    // Parametry WordPress
-                    if (href.includes('attachment_id=') || href.includes('download=')) return true;
-
-                    // Atrybut download
-                    if (link.hasAttribute('download')) return true;
-
-                    // Jeśli rozszerzone wykrywanie włączone
-                    if (enableExtendedDetection) {
-                        // Content-type w atrybucie
-                        const typeAttr = link.getAttribute('type');
-                        if (typeAttr && (
-                                typeAttr.startsWith('application/') ||
-                                typeAttr.startsWith('image/') ||
-                                typeAttr.startsWith('audio/') ||
-                                typeAttr.startsWith('video/')
-                            )) return true;
-
-                        // Klasy sugerujące plik
-                        const fileClasses = ['file', 'download', 'attachment', 'document'];
-                        for (const cls of fileClasses) {
-                            if (link.classList.contains(cls)) return true;
-                        }
-                    }
-
-                    return false;
                 }
 
                 // Zmień sposób wybierania linków PDF
