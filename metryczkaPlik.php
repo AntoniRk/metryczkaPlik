@@ -146,7 +146,6 @@ function check_pdf_links()
 
                     return `${day}-${month}-${year}`;
                 } catch (e) {
-                    console.error('Błąd formatowania daty:', e);
                     return dateStr || 'Nieznana';
                 }
             }
@@ -172,7 +171,6 @@ function check_pdf_links()
 
                     return `${day}-${month}-${year} ${hours}:${minutes}`;
                 } catch (e) {
-                    console.error('Błąd formatowania daty:', e);
                     return dateStr || 'Nieznana';
                 }
             }
@@ -228,24 +226,18 @@ function check_pdf_links()
 
                 function isFileLink(link) {
                     const href = link.href.toLowerCase();
-                    console.log('Sprawdzanie linku:', href);
 
                     // tutaj mocne uproszczenie, zakładam, że każdy plik bez adresu przed /wp-content/uploads/ jest wewnętrzny
                     if (href.includes('/wp-content/uploads/')) {
                         const uploadIndex = href.indexOf('/wp-content/uploads/');
-                        console.log('Index /wp-content/uploads/:', uploadIndex);
                         if (uploadIndex > 0) {
                             const beforeUpload = href.substring(0, uploadIndex);
-                            console.log('Część przed /wp-content/uploads/:', beforeUpload);
                             // Normalizuj obie wartości do porównania
                             const normalizedBeforeUpload = normalizePrefix(beforeUpload);
-                            console.log('Znormalizowana część przed /wp-content/uploads/:', normalizedBeforeUpload);
                             if (normalizedUrlPrefix && !normalizedBeforeUpload.includes(normalizedUrlPrefix)) {
-                                console.log('Link odrzucony - nie pasuje do prefiksu URL.');
                                 return false;
                             }
                         }
-                        console.log('Link zawiera /wp-content/uploads/, traktowany jako plik.');
                         return true;
                     }
 
@@ -450,7 +442,6 @@ function check_pdf_links()
                                 metadataContainer.dataset.verified = 'true';
 
                             }).fail(function(jqXHR, textStatus, errorThrown) {
-                                console.error('Błąd AJAX:', textStatus, errorThrown);
                                 metadataContainer.innerHTML = '<div class="error">Błąd podczas pobierania metadanych</div>';
                             });
                         });
