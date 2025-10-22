@@ -36,7 +36,6 @@ function check_pdf_links()
         $button_css = isset($options['button_css']) ? $options['button_css'] : '';
         $modal_css = isset($options['modal_css']) ? $options['modal_css'] : '';
         $table_css = isset($options['table_css']) ? $options['table_css'] : '';
-        //$table_css += ".mn-document-download { flex-wrap: wrap; }";
         $display_icon = isset($options['display_icon']) ? $options['display_icon'] : 1;
         $excluded_elements = isset($options['excluded_elements']) ? $options['excluded_elements'] : '';
         $excluded_classes = isset($options['excluded_classes']) ? $options['excluded_classes'] : '';
@@ -96,6 +95,9 @@ function check_pdf_links()
         <script>
             var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
             var urlPrefix = '<?php echo esc_js($url_prefix); ?>';
+            if (urlPrefix=='') {
+                urlPrefix = '<?php echo ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST']); ?>';
+            }
             // Normalizuj urlPrefix - usuń protokół i trailing slash
             function normalizePrefix(prefix) {
                 if (!prefix) return '';
