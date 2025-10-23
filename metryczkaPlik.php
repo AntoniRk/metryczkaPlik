@@ -282,11 +282,6 @@ function check_pdf_links()
                         metrykaButton.href = 'javascript:void(0)';
                         metrykaButton.className = 'mn-document-metryczka';
                         metrykaButton.textContent = 'Metryczka';
-                        metrykaButton.style.cursor = 'pointer';
-                        metrykaButton.style.color = '#154C8D';
-                        metrykaButton.style.textDecoration = 'underline';
-                        metrykaButton.style.marginRight = '10px';
-                        metrykaButton.style.whiteSpace = 'nowrap';
 
                         // Wstaw przycisk przed linkiem "Pobierz"
                         link.parentNode.insertBefore(metrykaButton, link);
@@ -295,11 +290,6 @@ function check_pdf_links()
                         const metadataContainer = document.createElement('div');
                         metadataContainer.className = 'pdf-metadata-container';
                         metadataContainer.style.display = 'none';
-                        metadataContainer.style.width = '100%';
-                        metadataContainer.style.clear = 'both';
-                        metadataContainer.style.marginTop = '10px';
-                        metadataContainer.style.flexBasis = '100%';
-                        metadataContainer.style.order = '999';
 
                         // Dodaj kontener na końcu .mn-document-download
                         $downloadContainer.append(metadataContainer);
@@ -420,11 +410,6 @@ function check_pdf_links()
                         if (parentWidth >= 400) {
                             const container = document.createElement('div');
                             container.className = 'pdf-container';
-                            container.style.display = 'flex';
-                            container.style.flexDirection = 'row';
-                            container.style.flexWrap = 'wrap';
-                            container.style.alignItems = 'flex-start';
-                            container.width = '100%';
 
                             // Skopiuj treść oryginalnego linku
                             const linkClone = document.createElement('a');
@@ -432,24 +417,17 @@ function check_pdf_links()
                             linkClone.innerHTML = link.innerHTML;
                             linkClone.target = '_blank';
                             linkClone.className = 'pdf-link-text';
-                            linkClone.style.marginRight = '10px';
 
                             // Dodaj przycisk metryczki
                             const metrykaButton = document.createElement('a');
                             metrykaButton.href = 'javascript:void(0)';
                             metrykaButton.className = 'pdf-metryczka-button';
                             metrykaButton.innerHTML = '<i class="fa-solid fa-info-circle" title="Metryczka"></i>';
-                            metrykaButton.style.color = '#154C8D';
-                            metrykaButton.style.cursor = 'pointer';
-                            metrykaButton.style.textDecoration = 'none';
-                            metrykaButton.style.textAlignLast = 'right';
                             container.appendChild(linkClone);
                             container.appendChild(metrykaButton);
                             const metadataContainer = document.createElement('div');
                             metadataContainer.className = 'pdf-metadata-container';
                             metadataContainer.style.display = 'none';
-
-                            metadataContainer.style.flexBasis = '100%';
 
                             // Dodaj kontener metadanych do głównego kontenera
                             container.appendChild(metadataContainer);
@@ -541,8 +519,6 @@ function check_pdf_links()
                             // Szerokość 300-400px: Ikona obok (z modalem)
                             const container = document.createElement('div');
                             container.className = 'pdf-container';
-                            container.style.display = 'flex';
-                            container.style.alignItems = 'center';
 
                             // Skopiuj treść oryginalnego linku
                             const linkClone = document.createElement('a');
@@ -550,12 +526,10 @@ function check_pdf_links()
                             linkClone.innerHTML = link.innerHTML;
                             linkClone.target = '_blank';
                             linkClone.className = 'pdf-link-text';
-                            linkClone.style.marginRight = '10px';
 
                             // Dodaj ikonę metryczki (z modalem)
                             const iconSpan = document.createElement('span');
                             iconSpan.className = 'pdf-icon-container';
-                            iconSpan.style.cursor = 'pointer';
                             iconSpan.innerHTML = '<i class="fa-solid fa-info-circle" title="Metryczka"></i>';
                             iconSpan.dataset.url = link.href;
                             iconSpan.dataset.title = link.textContent.trim();
@@ -634,9 +608,7 @@ function check_pdf_links()
                             // Szerokość < 300px: Ikona pod linkiem (z modalem)
                             const container = document.createElement('div');
                             container.className = 'pdf-container';
-                            container.style.display = 'flex';
-                            container.style.flexDirection = 'column';
-                            container.style.alignItems = 'flex-start';
+                            container.style.flexDirection = 'column !important';
 
                             // Skopiuj treść oryginalnego linku
                             const linkClone = document.createElement('a');
@@ -648,9 +620,7 @@ function check_pdf_links()
 
                             // Dodaj ikonę metryczki (z modalem)
                             const iconSpan = document.createElement('span');
-                            iconSpan.className = 'pdf-icon-container';
-                            iconSpan.style.cursor = 'pointer';
-                            iconSpan.style.alignSelf = 'center';
+                            iconSpan.className = 'pdf-icon-container pdf-icon-container-pod';
                             iconSpan.innerHTML = '<i class="fa-solid fa-info-circle" title="Metryczka"></i>';
                             iconSpan.dataset.url = link.href;
                             iconSpan.dataset.title = link.textContent.trim();

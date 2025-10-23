@@ -10,12 +10,31 @@ function pdf_metryczka_default_options()
         'display_icon' => 1,
         'button_css' => ".pdf-container {
     display: inline-flex !important;
-    align-items: center !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    align-items: flex-start;
+    width: 100% !important;
 }
 
 .pdf-link-text {
     color: #154C8D !important;
     text-decoration: underline !important;
+    margin-right: 5px !important;
+}
+
+.pdf-icon-container{
+    cursor: pointer !important;
+}
+
+.pdf-icon-container-pod{
+    margin: auto !important;
+}
+    
+.pdf-metryczka-button{
+    color: #154C8D !important;
+    cursor: pointer !important;
+    text-decoration: none !important;
+    text-align-last: right !important;
 }
 
 .fa-info-circle {
@@ -111,6 +130,9 @@ function pdf_metryczka_default_options()
     border: 2px solid #154C8D !important;
     border-radius: 0px 0px 10px !important;
     transition: all 0.3s ease !important;
+    order: 999 !important;
+    flex-basis: 100% !important;
+    width: 100% !important;
 }
 
 .mn-metadata-table {
@@ -172,10 +194,9 @@ function pdf_metryczka_default_options()
     margin-left: 0 !important;
 }
 
-.mn-document-download .pdf-metadata-container {
-    order: 999 !important;
-    flex-basis: 100% !important;
-    width: 100% !important;
+.pdf-metadata-container {
+        clear: both !important;
+        margin-top: 0px !important;
 }
 
 @media (max-width: 600px) {
@@ -198,7 +219,20 @@ function pdf_metryczka_default_options()
         width: 100% !important;
         box-sizing: border-box !important;
     }
-}",
+}
+    
+/* przycisk Metryczka w .mn-document-download */
+.mn-document-metryczka{
+    cursor: pointer !important;
+    color: #154C8D !important;
+    text-decoration: underline !important;
+    margin-right: 10px !important;
+    white-space: nowrap !important;
+}
+
+
+
+",
         'excluded_elements' => '',
         'excluded_classes' => 'mn-document-download',
         'url_prefix' => (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'], // Automatycznie pobierany z WordPress    
