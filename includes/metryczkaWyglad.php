@@ -29,7 +29,7 @@ function pdf_metryczka_default_options()
 }",
         'modal_css' => ".modal-content {
     border: 2px solid #154C8D !important;
-    border-radius: 10px 40px 10px !important;
+    border-radius: 10px 10px 10px !important;
     margin: auto !important;
 }
 
