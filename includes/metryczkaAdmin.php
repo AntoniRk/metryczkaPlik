@@ -86,6 +86,15 @@ function pdf_metryczka_settings_page()
                         </td>
                     </tr>
                     <tr valign="top">
+                        <th scope="row">Metryczki na urządzeniach mobilnych</th>
+                        <td>
+                            <label>
+                                <input type="checkbox" name="pdf_metryczka_options[enable_mobile]" value="0" <?php checked(1, $options['enable_mobile']); ?> />
+                                Włącz metryczki na urządzeniach mobilnych (nie zalecane)
+                            </label>
+                        </td>
+                    </tr>
+                    <tr valign="top">
                         <th scope="row">Rozszerzone wykrywanie załączników</th>
                         <td>
                             <label>
