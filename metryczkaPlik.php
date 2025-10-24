@@ -106,9 +106,9 @@ function check_pdf_links()
                 tableHTML += `
                     <tr>
                         <td>Opublikowano przez:</td>
-                        <td>${data.publikator || 'Brak danych'}</td>
+                        <td>${data.publikator}</td>
                         <td>Data publikacji:</td>
-                        <td>${formatDateDMYHM(data.data_publikacji) || 'Brak danych'}</td>
+                        <td>${formatDateDMYHM(data.data_publikacji)}</td>
                     </tr>`;
                 if (data.zaktualizowal && data.data_aktualizacji) {
                     tableHTML += `
@@ -421,9 +421,9 @@ function check_pdf_links()
                                 metadataHTML += `
                                     <tr>
                                         <td>Opublikowano przez:</td>
-                                        <td>${data.publikator || 'Brak danych'}</td>
+                                        <td>${data.publikator}</td>
                                         <td>Data publikacji:</td>
-                                        <td>${formatDateDMYHM(data.data_publikacji) || 'Brak danych'}</td>
+                                        <td>${formatDateDMYHM(data.data_publikacji)}</td>
                                     </tr>`;
                                 if (data.zaktualizowal && data.data_aktualizacji) {
                                     metadataHTML += `
@@ -542,11 +542,10 @@ function check_pdf_links()
                                     metadataHTML += `
                                         <tr>
                                             <td>Opublikowano przez:</td>
-                                            <td>${data.publikator || 'Brak danych'}</td>
+                                            <td>${data.publikator}</td>
                                             <td>Data publikacji:</td>
-                                            <td>${formatDateDMYHM(data.data_publikacji) || 'Brak danych'}</td>
+                                            <td>${formatDateDMYHM(data.data_publikacji)}</td>
                                         </tr>`;
-
                                     if (data.zaktualizowal && data.data_aktualizacji) {
                                         metadataHTML += `
                                             <tr>
