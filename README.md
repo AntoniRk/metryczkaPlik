@@ -34,7 +34,7 @@ polega na wczytaniu wszystkich odnośników zawartych w elemencie `<a>` na stron
 #### Etap 1: Sprawdzanie linku
 
 1. Czy link zawiera `/wp-content/uploads/`, a następnie upewnia się czy z tej samej strony głównej
-2. Czy link znajduje się w kontenerze o klasie mn-document-download
+2. Czy link znajduje się w kontenerze o klasie `mn-document-download`
 3. Czy link znajduje się w wykluczonym elemencie (np. `header`, `footer`)
 4. Czy link znajduje się w wykluczonej klasie (np. `wygnani`)
 
