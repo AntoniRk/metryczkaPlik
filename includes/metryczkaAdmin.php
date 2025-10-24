@@ -95,15 +95,6 @@ function pdf_metryczka_settings_page()
                         </td>
                     </tr>
                     <tr valign="top">
-                        <th scope="row">Rozszerzone wykrywanie załączników</th>
-                        <td>
-                            <label>
-                                <input type="checkbox" name="pdf_metryczka_options[enable_extended_detection]" value="1" <?php checked(1, $options['enable_extended_detection'] ?? 0); ?> />
-                                Wykrywaj pliki również po atrybutach download, type oraz kontekście
-                            </label>
-                        </td>
-                    </tr>
-                    <tr valign="top">
                         <th scope="row">Wyświetlanie ikony metryczki</th>
                         <td>
                             <label>

@@ -55,7 +55,6 @@ function pdf_metryczka_sanitize_options($input)
 
     $output['enable_auto_detection'] = isset($input['enable_auto_detection']) ? 1 : 0;
     $output['enable_mobile'] = isset($input['enable_mobile']) ? 1 : 0;
-    $output['enable_extended_detection'] = isset($input['enable_extended_detection']) ? 1 : 0; // Dodajemy tę linię
     $output['display_icon'] = isset($input['display_icon']) ? 1 : 0;
     $output['button_css'] = wp_strip_all_tags($input['button_css']);
     $output['modal_css'] = wp_strip_all_tags($input['modal_css']);

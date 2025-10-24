@@ -42,7 +42,6 @@ function check_pdf_links()
         $display_icon = isset($options['display_icon']) ? $options['display_icon'] : 1;
         $excluded_elements = isset($options['excluded_elements']) ? $options['excluded_elements'] : '';
         $excluded_classes = isset($options['excluded_classes']) ? $options['excluded_classes'] : '';
-        $enable_extended_detection = isset($options['enable_extended_detection']) ? $options['enable_extended_detection'] : 1;
         $url_prefix = isset($options['url_prefix']) ? $options['url_prefix'] : '';
 ?>
         <style>
@@ -219,10 +218,6 @@ function check_pdf_links()
                     }
                 });
             }
-
-
-            // Dodaj zmienną globalną z opcją rozszerzonego wykrywania
-            var enableExtendedDetection = <?php echo isset($options['enable_extended_detection']) && $options['enable_extended_detection'] ? 'true' : 'false'; ?>;
 
             document.addEventListener('DOMContentLoaded', function() {
                 const $ = jQuery;

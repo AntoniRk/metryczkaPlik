@@ -6,7 +6,6 @@ function pdf_metryczka_default_options()
     return array(
         'enable_auto_detection' => 1,
         'enable_mobile' => 0,
-        'enable_extended_detection' => 1,
         'display_icon' => 1,
         'button_css' => ".pdf-container {
     display: inline-flex !important;
