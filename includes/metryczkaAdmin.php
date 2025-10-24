@@ -98,7 +98,7 @@ function pdf_metryczka_settings_page()
                         <th scope="row">Wyświetlanie ikony metryczki</th>
                         <td>
                             <label>
-                                <input type="checkbox" name="pdf_metryczka_options[display_icon]" value="1" <?php checked(1, $options['display_icon']); ?> disabled/>
+                                <input type="checkbox" name="pdf_metryczka_options[display_icon]" value="1" checked disabled/>
                                 Pokaż ikonę metryczki obok linków do plików
                             </label>
                         </td>
