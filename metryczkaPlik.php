@@ -54,7 +54,6 @@ function check_pdf_links()
         <script>
             var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
             var urlPrefix = '<?php echo esc_js($url_prefix); ?>';
-            console.log("URL Prefix:", urlPrefix);
             if (urlPrefix == '') {
                 urlPrefix = '<?php echo ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST']); ?>';
             }
