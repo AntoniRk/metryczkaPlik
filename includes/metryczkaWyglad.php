@@ -106,6 +106,11 @@ function pdf_metryczka_default_options()
     white-space: nowrap !important;
 }
 
+/* predkosc animacji okna */
+#pdfModal {
+    transition: opacity 0.1s ease !important;
+}
+
 @media (max-width: 420px) {
     #pdfDetails table td:nth-child(4n) {
         white-space: normal !important;
@@ -116,11 +121,6 @@ function pdf_metryczka_default_options()
     #pdfDetails {
         font-size: 14px !important;
         padding: 5px !important;
-    }
-
-    #pdfDetails table td:nth-child(3n) {
-        display: none !important; 
-        /* do przeanalizowania */
     }
 }",
         'table_css' => ".mn-document-metadata, .pdf-metadata-container {
@@ -195,8 +195,8 @@ function pdf_metryczka_default_options()
 }
 
 .pdf-metadata-container {
-        clear: both !important;
-        margin-top: 0px !important;
+    clear: both !important;
+    margin-top: 0px !important;
 }
 
 @media (max-width: 600px) {

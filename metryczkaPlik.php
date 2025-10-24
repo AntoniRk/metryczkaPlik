@@ -25,7 +25,7 @@ function check_pdf_links()
     if (!$options['enable_auto_detection']) {
         return;
     }
-    if(wp_is_mobile() && !$options['enable_mobile']) {
+    if (wp_is_mobile() && !$options['enable_mobile']) {
         return;
     }
 
@@ -51,13 +51,11 @@ function check_pdf_links()
             }
 
             <?php endif; ?><?php echo $modal_css; ?><?php echo $table_css; ?>
-
-            
         </style>
         <script>
             var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
             var urlPrefix = '<?php echo esc_js($url_prefix); ?>';
-            if (urlPrefix=='') {
+            if (urlPrefix == '') {
                 urlPrefix = '<?php echo ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST']); ?>';
             }
             // Normalizuj urlPrefix - usuń protokół i trailing slash
@@ -90,6 +88,47 @@ function check_pdf_links()
                 ?>;
 
             var debugMode = <?php echo isset($options['debug_mode']) && $options['debug_mode'] ? 'true' : 'false'; ?>;
+
+            // Funkcja pomocnicza do wyświetlania modala z danymi
+            function displayModalWithData(url, title, data) {
+                jQuery('#pdfTitle').html(`<a href="${url}" target="_blank" onclick="incrementDownloads('${url}')">${title}</a>`);
+                let tableHTML = `
+                    <table class="table">`;
+                if (data.autor && data.data_wytworzenia) {
+                    tableHTML += `
+                        <tr>
+                            <td>Wytworzył:</td>
+                            <td>${data.autor}</td>
+                            <td>Data wytworzenia:</td>
+                            <td>${formatDateDMY(data.data_wytworzenia)}</td>
+                        </tr>`;
+                }
+                tableHTML += `
+                    <tr>
+                        <td>Opublikowano przez:</td>
+                        <td>${data.publikator || 'Brak danych'}</td>
+                        <td>Data publikacji:</td>
+                        <td>${formatDateDMYHM(data.data_publikacji) || 'Brak danych'}</td>
+                    </tr>`;
+                if (data.zaktualizowal && data.data_aktualizacji) {
+                    tableHTML += `
+                        <tr>
+                            <td>Zaktualizował:</td>
+                            <td>${data.zaktualizowal}</td>
+                            <td>Data aktualizacji:</td>
+                            <td>${formatDateDMYHM(data.data_aktualizacji)}</td>
+                        </tr>`;
+                }
+                tableHTML += `
+                        <tr>
+                            <td>Liczba pobrań:</td>
+                            <td id="liczba_pobran" colspan="3">${data.liczba_pobran || '0'}</td>
+                        </tr>
+                    </table>`;
+
+                jQuery('#pdfDetails').html(tableHTML);
+                jQuery('#pdfModal').modal('show');
+            }
 
             function formatDateDMY(dateStr) {
                 if (!dateStr) return 'Nieznana';
@@ -331,6 +370,11 @@ function check_pdf_links()
                         metrykaButton.addEventListener('click', function() {
                             const $metadataContainer = $(metadataContainer);
 
+                            // Zabezpieczenie przed wielokrotnym kliknięciem
+                            if (metadataContainer.dataset.loading === 'true') {
+                                return;
+                            }
+
                             // Jeśli już zweryfikowane i załadowane - tylko toggle
                             if (metadataContainer.dataset.verified === 'true') {
                                 toggleMetadataContainer($metadataContainer, metadataContainer.style.display !== 'block');
@@ -338,6 +382,7 @@ function check_pdf_links()
                             }
 
                             // Pierwsze kliknięcie - sprawdź i załaduj
+                            metadataContainer.dataset.loading = 'true';
                             metadataContainer.innerHTML = '<div class="loading">Ładowanie metadanych...</div>';
                             toggleMetadataContainer($metadataContainer, true);
 
@@ -348,6 +393,8 @@ function check_pdf_links()
                                 title: documentName,
                                 is_document_download: 'true'
                             }, function(data) {
+                                metadataContainer.dataset.loading = 'false';
+
                                 if (!data || !data.attachment_id) {
                                     // Nie jest plikiem WordPress
                                     metadataContainer.innerHTML = '<div class="error">Ten link nie prowadzi do pliku w systemie.</div>';
@@ -361,19 +408,23 @@ function check_pdf_links()
 
                                 // Jest plikiem - pokaż metryczki
                                 let metadataHTML = `
-                                    <table class="mn-metadata-table">
+                                    <table class="mn-metadata-table">`;
+                                if (data.autor && data.data_wytworzenia) {
+                                    metadataHTML += `
                                         <tr>
                                             <td>Wytworzył:</td>
-                                            <td>${data.autor || 'Brak danych'}</td>
+                                            <td>${data.autor}</td>
                                             <td>Data wytworzenia:</td>
-                                            <td>${formatDateDMY(data.data_wytworzenia) || 'Brak danych'}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Opublikowano przez:</td>
-                                            <td>${data.publikator || 'Brak danych'}</td>
-                                            <td>Data publikacji:</td>
-                                            <td>${formatDateDMYHM(data.data_publikacji) || 'Brak danych'}</td>
+                                            <td>${formatDateDMY(data.data_wytworzenia)}</td>
                                         </tr>`;
+                                }
+                                metadataHTML += `
+                                    <tr>
+                                        <td>Opublikowano przez:</td>
+                                        <td>${data.publikator || 'Brak danych'}</td>
+                                        <td>Data publikacji:</td>
+                                        <td>${formatDateDMYHM(data.data_publikacji) || 'Brak danych'}</td>
+                                    </tr>`;
                                 if (data.zaktualizowal && data.data_aktualizacji) {
                                     metadataHTML += `
                                         <tr>
@@ -394,6 +445,7 @@ function check_pdf_links()
                                 metadataContainer.dataset.verified = 'true';
 
                             }).fail(function(jqXHR, textStatus, errorThrown) {
+                                metadataContainer.dataset.loading = 'false';
                                 metadataContainer.innerHTML = '<div class="error">Błąd podczas pobierania metadanych</div>';
                             });
                         });
@@ -437,6 +489,11 @@ function check_pdf_links()
                             metrykaButton.addEventListener('click', function() {
                                 const $metadataContainer = $(metadataContainer);
 
+                                // Zabezpieczenie przed wielokrotnym kliknięciem
+                                if (metadataContainer.dataset.loading === 'true') {
+                                    return;
+                                }
+
                                 // Jeśli już zweryfikowane i załadowane - tylko toggle
                                 if (metadataContainer.dataset.verified === 'true') {
                                     if (metadataContainer.style.display === 'block') {
@@ -448,6 +505,7 @@ function check_pdf_links()
                                 }
 
                                 // Pierwsze kliknięcie - sprawdź i załaduj
+                                metadataContainer.dataset.loading = 'true';
                                 metadataContainer.style.display = 'block';
                                 metadataContainer.innerHTML = '<div class="loading">Ładowanie metadanych...</div>';
 
@@ -457,6 +515,8 @@ function check_pdf_links()
                                     url: linkClone.href,
                                     title: linkClone.textContent.trim()
                                 }, function(data) {
+                                    metadataContainer.dataset.loading = 'false';
+
                                     if (!data || !data.attachment_id) {
                                         // Nie jest plikiem WordPress - ukryj przycisk
                                         metadataContainer.innerHTML = '<div class="error">Ten link nie prowadzi do pliku w systemie.</div>';
@@ -469,19 +529,24 @@ function check_pdf_links()
 
                                     // Jest plikiem - pokaż metryczki
                                     let metadataHTML = `
-                                        <table class="mn-metadata-table">
+                                        <table class="mn-metadata-table">`;
+                                    if (data.autor && data.data_wytworzenia) {
+                                        metadataHTML += `
                                             <tr>
                                                 <td>Wytworzył:</td>
-                                                <td>${data.autor || 'Brak danych'}</td>
+                                                <td>${data.autor}</td>
                                                 <td>Data wytworzenia:</td>
-                                                <td>${formatDateDMY(data.data_wytworzenia) || 'Brak danych'}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Opublikowano przez:</td>
-                                                <td>${data.publikator || 'Brak danych'}</td>
-                                                <td>Data publikacji:</td>
-                                                <td>${formatDateDMYHM(data.data_publikacji) || 'Brak danych'}</td>
+                                                <td>${formatDateDMY(data.data_wytworzenia)}</td>
                                             </tr>`;
+                                    }
+                                    metadataHTML += `
+                                        <tr>
+                                            <td>Opublikowano przez:</td>
+                                            <td>${data.publikator || 'Brak danych'}</td>
+                                            <td>Data publikacji:</td>
+                                            <td>${formatDateDMYHM(data.data_publikacji) || 'Brak danych'}</td>
+                                        </tr>`;
+
                                     if (data.zaktualizowal && data.data_aktualizacji) {
                                         metadataHTML += `
                                             <tr>
@@ -502,6 +567,7 @@ function check_pdf_links()
                                     metadataContainer.dataset.verified = 'true';
 
                                 }).fail(function() {
+                                    metadataContainer.dataset.loading = 'false';
                                     metadataContainer.innerHTML = '<div class="error">Błąd podczas pobierania metadanych</div>';
                                     setTimeout(function() {
                                         metrykaButton.style.display = 'none';
@@ -544,57 +610,47 @@ function check_pdf_links()
                             // Obsługa kliknięcia ikony
                             iconSpan.addEventListener('click', function(e) {
                                 e.stopPropagation();
+
+                                // Zabezpieczenie przed wielokrotnym kliknięciem
+                                if (this.dataset.loading === 'true') {
+                                    return;
+                                }
+
                                 const url = this.dataset.url;
                                 const title = this.dataset.title;
 
+                                // Sprawdź czy dane są już załadowane
+                                if (this.dataset.verified === 'true' && this.dataset.cachedData) {
+                                    const data = JSON.parse(this.dataset.cachedData);
+                                    displayModalWithData(url, title, data);
+                                    return;
+                                }
+
+                                this.dataset.loading = 'true';
                                 $('#pdfDetails').html('<div class="loading">Ładowanie metadanych...</div>');
                                 $('#pdfTitle').html(title);
 
+                                const self = this;
                                 $.post(ajaxurl, {
                                     action: 'get_pdf_data',
                                     url: url,
                                     title: title
                                 }, function(data) {
+                                    self.dataset.loading = 'false';
+
                                     if (!data || !data.attachment_id) {
                                         $('#pdfModal').modal('hide');
                                         iconSpan.style.display = 'none';
                                         return;
                                     }
 
-                                    $('#pdfTitle').html(`<a href="${url}" target="_blank" onclick="incrementDownloads('${url}')">${title}</a>`);
-                                    let tableHTML = `
-                                        <table class="table">
-                                            <tr>
-                                                <td>Wytworzył:</td>
-                                                <td>${data.autor || 'Brak danych'}</td>
-                                                <td>Data wytworzenia:</td>
-                                                <td>${formatDateDMY(data.data_wytworzenia) || 'Brak danych'}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Opublikowano przez:</td>
-                                                <td>${data.publikator || 'Brak danych'}</td>
-                                                <td>Data publikacji:</td>
-                                                <td>${formatDateDMYHM(data.data_publikacji) || 'Brak danych'}</td>
-                                            </tr>`;
-                                    if (data.zaktualizowal && data.data_aktualizacji) {
-                                        tableHTML += `
-                                            <tr>
-                                                <td>Zaktualizował:</td>
-                                                <td>${data.zaktualizowal}</td>
-                                                <td>Data aktualizacji:</td>
-                                                <td>${formatDateDMYHM(data.data_aktualizacji)}</td>
-                                            </tr>`;
-                                    }
-                                    tableHTML += `
-                                            <tr>
-                                                <td>Liczba pobrań:</td>
-                                                <td id="liczba_pobran" colspan="3">${data.liczba_pobran || '0'}</td>
-                                            </tr>
-                                        </table>`;
+                                    // Zapisz dane do cache
+                                    self.dataset.verified = 'true';
+                                    self.dataset.cachedData = JSON.stringify(data);
 
-                                    $('#pdfDetails').html(tableHTML);
-                                    $('#pdfModal').modal('show');
+                                    displayModalWithData(url, title, data);
                                 }).fail(function() {
+                                    self.dataset.loading = 'false';
                                     $('#pdfModal').modal('hide');
                                     iconSpan.style.display = 'none';
                                 });
@@ -631,57 +687,47 @@ function check_pdf_links()
                             // Obsługa kliknięcia ikony
                             iconSpan.addEventListener('click', function(e) {
                                 e.stopPropagation();
+
+                                // Zabezpieczenie przed wielokrotnym kliknięciem
+                                if (this.dataset.loading === 'true') {
+                                    return;
+                                }
+
                                 const url = this.dataset.url;
                                 const title = this.dataset.title;
 
+                                // Sprawdź czy dane są już załadowane
+                                if (this.dataset.verified === 'true' && this.dataset.cachedData) {
+                                    const data = JSON.parse(this.dataset.cachedData);
+                                    displayModalWithData(url, title, data);
+                                    return;
+                                }
+
+                                this.dataset.loading = 'true';
                                 $('#pdfDetails').html('<div class="loading">Ładowanie metadanych...</div>');
                                 $('#pdfTitle').html(title);
 
+                                const self = this;
                                 $.post(ajaxurl, {
                                     action: 'get_pdf_data',
                                     url: url,
                                     title: title
                                 }, function(data) {
+                                    self.dataset.loading = 'false';
+
                                     if (!data || !data.attachment_id) {
                                         $('#pdfModal').modal('hide');
                                         iconSpan.style.display = 'none';
                                         return;
                                     }
 
-                                    $('#pdfTitle').html(`<a href="${url}" target="_blank" onclick="incrementDownloads('${url}')">${title}</a>`);
-                                    let tableHTML = `
-                                        <table class="table">
-                                            <tr>
-                                                <td>Wytworzył:</td>
-                                                <td>${data.autor || 'Brak danych'}</td>
-                                                <td>Data wytworzenia:</td>
-                                                <td>${formatDateDMY(data.data_wytworzenia) || 'Brak danych'}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Opublikowano przez:</td>
-                                                <td>${data.publikator || 'Brak danych'}</td>
-                                                <td>Data publikacji:</td>
-                                                <td>${formatDateDMYHM(data.data_publikacji) || 'Brak danych'}</td>
-                                            </tr>`;
-                                    if (data.zaktualizowal && data.data_aktualizacji) {
-                                        tableHTML += `
-                                            <tr>
-                                                <td>Zaktualizował:</td>
-                                                <td>${data.zaktualizowal}</td>
-                                                <td>Data aktualizacji:</td>
-                                                <td>${formatDateDMYHM(data.data_aktualizacji)}</td>
-                                            </tr>`;
-                                    }
-                                    tableHTML += `
-                                            <tr>
-                                                <td>Liczba pobrań:</td>
-                                                <td id="liczba_pobran" colspan="3">${data.liczba_pobran || '0'}</td>
-                                            </tr>
-                                        </table>`;
+                                    // Zapisz dane do cache
+                                    self.dataset.verified = 'true';
+                                    self.dataset.cachedData = JSON.stringify(data);
 
-                                    $('#pdfDetails').html(tableHTML);
-                                    $('#pdfModal').modal('show');
+                                    displayModalWithData(url, title, data);
                                 }).fail(function() {
+                                    self.dataset.loading = 'false';
                                     $('#pdfModal').modal('hide');
                                     iconSpan.style.display = 'none';
                                 });
