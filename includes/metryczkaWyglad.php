@@ -228,9 +228,6 @@ function pdf_metryczka_default_options()
     margin-right: 10px !important;
     white-space: nowrap !important;
 }
-
-
-
 ",
         'excluded_elements' => '',
         'excluded_classes' => 'mn-document-download',
