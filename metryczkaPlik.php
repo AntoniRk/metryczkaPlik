@@ -42,7 +42,7 @@ function check_pdf_links()
         $display_icon = isset($options['display_icon']) ? $options['display_icon'] : 1;
         $excluded_elements = isset($options['excluded_elements']) ? $options['excluded_elements'] : '';
         $excluded_classes = isset($options['excluded_classes']) ? $options['excluded_classes'] : '';
-        $url_prefix = isset($options['url_prefix']) ? $options['url_prefix'] : '';
+        $url_prefix = isset($options['url_prefix']) ? $options['url_prefix'] : esc_html((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST']);
 ?>
         <style>
             <?php echo $button_css; ?><?php if (!$display_icon): ?>.fa-info-circle {
@@ -54,6 +54,7 @@ function check_pdf_links()
         <script>
             var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
             var urlPrefix = '<?php echo esc_js($url_prefix); ?>';
+            console.log("URL Prefix:", urlPrefix);
             if (urlPrefix == '') {
                 urlPrefix = '<?php echo ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST']); ?>';
             }

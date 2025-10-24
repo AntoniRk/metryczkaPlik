@@ -234,6 +234,6 @@ function pdf_metryczka_default_options()
 ",
         'excluded_elements' => '',
         'excluded_classes' => 'mn-document-download',
-        'url_prefix' => (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'], // Automatycznie pobierany z WordPress    
+        'url_prefix' => esc_html((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST']), // Automatycznie pobierany z WordPress    
     );
 }
