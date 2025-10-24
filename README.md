@@ -33,10 +33,10 @@ polega na wczytaniu wszystkich odnośników zawartych w elemencie `<a>` na stron
 
 #### Etap 1: Sprawdzanie linku
 
-1. Czy link jest zewnętrzny  
-2. Czy na końcu występuje rozszerzenie (np. .pdf)  
-3. Czy zawiera atrybuty pliku do pobrania  
-4. Czy link znajduje się w wykluczonym elemencie (np. `header`, `footer`)  
+1. Czy link zawiera `/wp-content/uploads/`, a następnie upewnia się czy z tej samej strony głównej
+2. Czy link znajduje się w kontenerze o klasie `mn-document-download`
+3. Czy link znajduje się w wykluczonym elemencie (np. `header`, `footer`)
+4. Czy link znajduje się w wykluczonej klasie (np. `wygnani`)
 
 #### Etap 2: Umieszczanie metryczki w zależności od kontekstu
 
@@ -45,9 +45,9 @@ polega na wczytaniu wszystkich odnośników zawartych w elemencie `<a>` na stron
 2. Jeśli szerokość kontenera ≥ 400 px  
    → Dodanie ikony obok linku, ikona rozwija tabelkę  
 3. Jeśli szerokość kontenera ≥ 300 px  
-   → Dodanie ikony obok linku, ikona wywołuje modal  
+   → Dodanie ikony obok linku, ikona wywołuje modal (okno)
 4. Inaczej (pozostałe przypadki)  
-   → Dodanie ikony pod linkiem, ikona wywołuje modal  
+   → Dodanie ikony pod linkiem, ikona wywołuje modal (okno)
 
 - funkcja `check_pdf_links()`
    - sprawdza, czy jest włączone sprawdzanie odnośników
