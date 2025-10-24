@@ -54,22 +54,22 @@ polega na wczytaniu wszystkich odnośników zawartych w elemencie `<a>` na stron
    - wczytuje wymagane technologie
    - wczytuje zapisane ustawienia i wygląd
    - DO USUNIĘCIA / KONTROLI admin-ajax.php
+   - funkcja `displayModalWithData(url, title, data)` tworzy obiekt modal do wyświetlenia metryczki w oknie i przechowania danych
    - funkcja `formatDateDMY(dateStr)` konwertuje datę do obiektu Date i formatuje DD-MM-RRRR
    - funkcja `formatDateDMYHM(dateStr)` konwertuje datę do obiektu Date i formatuje DD-MM-RRRR GG:MM
    - funkcja `incrementDownloads(url)` aktualizuje ilość pobrań po kliknięciu w odnośnik z plikiem
-   - rozszerzone wykrywanie (jeśli włączone w ustawieniach) polega na wykonaniu serii dłużej zajmujących sprawdzeń czy z drugiej strony odnośnika jest plik
    - funkcja ` isFileLink(link)` sprawdza czy odnośnik to plik, podstawowe wykrywanie, lub rozszerzone
    - pobranie wszystkich elementów `<a>`
    - przeskanowanie wszystkich elementów `<a>` funkcją ` isFileLink(link)` z wyłączeniem wykluczeń
    - stworzenie odpowiednich metryczek dla odnośników z plikiem
       - `<a>` z klasą '.mn-document-download'
          - stworzenie przycisku do wyświetlenia metryczki obok `<a>`
-         - funkcja `toggleMetadataContainer($container, show)` do możliwie jak najpłynniejszego pokazywania metryczki
+         - funkcja `toggleMetadataContainer($container, show)` do płynnego pokazywania/ukrywania tabelki z użyciem jQuery
          - obsługa kliknięcia przycisku 'Metryczka'
             - pobranie danych o pliku
             - wyświetlenie danych w tabeli
          - obsługa kliknięcia przycisku 'Pobierz'
-            - wywołanie funkcji `incrementDownloads` zwiększając ilość pobrań
+            - wywołanie funkcji `incrementDownloads` zwiększając ilość pobrań i zaktualizowanie wartości w metryczce
       - sprawdzenie rozmiaru kontenera
          - kontener większy od 400 pikseli
             - pobranie treści oryginalnego linku
@@ -79,25 +79,25 @@ polega na wczytaniu wszystkich odnośników zawartych w elemencie `<a>` na stron
                - zapytanie o dane za pomocą ajax
                - wyświetlenie tabeli z danymi, lub błąd pobierania
             - obsługa kliknięcia odnośnika
-               - wywołanie funkcji `incrementDownloads` zwiększając ilość pobrań
-         - kontener większy, lub równy 300 pikseli
+               - wywołanie funkcji `incrementDownloads` zwiększając ilość pobrań i zaktualizowanie wartości w metryczce
+         - kontener 300px <= x =< 400px
             - kopia treści oryginalnego linku
             - przycisk w stylu ikona obok odnośnika
             - zastąpienie oryginalny link kontenerem
             - obsługa kliknięcia ikony
                - pobranie danych pliku
-               - wyświetla się okno 'modal' z tabelką z danymi
+               - wyświetla się okno 'modal' z tabelką z danymi za pomocą funkcji `displayModalWithData(url, title, data)`
                - obsługa kliknięcia odnośnika
-                  - inkrementacja ilości pobrań
+                  - inkrementacja ilości pobrań i zaktualizowanie wartości w metryczce
          - kontener mniejszy od 300 pikseli
             - kopia treści oryginalnego linku
             - przycisk w stylu ikona pod odnośnika
             - zastąpienie oryginalny link kontenerem
             - obsługa kliknięcia ikony
                - pobranie danych pliku
-               - wyświetla się okno 'modal' z tabelką z danymi
+               - wyświetla się okno 'modal' z tabelką z danymi za pomocą funkcji `displayModalWithData(url, title, data)`
                - obsługa kliknięcia odnośnika
-                  - inkrementacja ilości pobrań
+                  - inkrementacja ilości pobrań i zaktualizowanie wartości w metryczce
    - obsługa kliknięcia w ikonę
    - obsługa kliknięcia w plik
    - obsługa zamknięcia modalu
@@ -119,8 +119,8 @@ Jeden wielki formularz, który decyduje o sposobach wykrywania plików, wyklucze
    - strona z ustawieniami
       - zakładka 'Ustawienia ogólne'
          - wybór czy 'Automatyczne wykrywanie załączników'
-         - wybór czy 'Rozszerzone wykrywanie załączników'
-         - wybór czy 'Wyświetlanie ikony metryczki' (JESZCZE NIE)
+         - wybór czy 'Metryczki na urządzeniach mobilnych'
+         - wybór czy 'Wyświetlanie ikony metryczki' (brak wyboru, opcja zawsze włączona)
          - pole z 'Prefix URL'
          - 'Wykluczenia' - do określenia elementów i klasy, które mają zostać wykluczone z dodawania metryczek
             - pole 'Wykluczone elementy HTML'
