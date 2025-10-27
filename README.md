@@ -13,7 +13,7 @@ Pobierz ZIP, następnie w WordPress wybierz opcję **Wtyczki > Dodaj wtyczkę**,
 Alternatywnie rozpakowany folder z wtyczką wrzuć w pliki serwera:  
 *nazwa_wordpressa/wp-content/plugins*
 
-## Dokumentacja (jeszcze nie koniec)
+## Dokumentacja
 
 ```
 METRYCZKAPLIK/
