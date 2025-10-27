@@ -515,6 +515,7 @@ function check_pdf_links()
                                     if (!data || !data.attachment_id) {
                                         // Nie jest plikiem WordPress - ukryj przycisk
                                         metadataContainer.innerHTML = '<div class="error">Ten link nie prowadzi do pliku w systemie.</div>';
+                                        metrykaButton.style.pointerEvents = 'none';
                                         setTimeout(function() {
                                             metrykaButton.style.display = 'none';
                                             metadataContainer.remove();
@@ -563,6 +564,7 @@ function check_pdf_links()
                                 }).fail(function() {
                                     metadataContainer.dataset.loading = 'false';
                                     metadataContainer.innerHTML = '<div class="error">Błąd podczas pobierania metadanych</div>';
+                                    metrykaButton.style.pointerEvents = 'none';
                                     setTimeout(function() {
                                         metrykaButton.style.display = 'none';
                                         metadataContainer.remove();
