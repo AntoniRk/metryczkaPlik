@@ -123,8 +123,9 @@ Jeden wielki formularz, który decyduje o sposobach wykrywania plików, wyklucze
          - wybór czy 'Wyświetlanie ikony metryczki' (brak wyboru, opcja zawsze włączona)
          - pole z 'Prefix URL'
          - 'Wykluczenia' - do określenia elementów i klasy, które mają zostać wykluczone z dodawania metryczek
-            - pole 'Wykluczone elementy HTML'
-            - pole 'Wykluczone elementy CSS'
+            - pole 'Wykluczone adresy UTL' przy aktywacji wtyczki na stronie sprawdza, czy URL zawiera wpisane tutaj wykluczenie i jeśli tak to plugin się nie wykonuje
+            - pole 'Wykluczone elementy HTML' jak wyżej tylko ograniczone do elementu
+            - pole 'Wykluczone elementy CSS' do klasy
       - zakładka 'Style i wygląd'
          - wygląd przycisku metryczki
             - pole do zmiany stylu

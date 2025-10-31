@@ -116,10 +116,10 @@ function pdf_metryczka_settings_page()
                 <p class="description">Określ elementy i klasy, które mają być wykluczone z dodawania metryczek. Oddziel wiele wartości przecinkami.</p>
                 <table class="form-table">
                     <tr valign="top">
-                        <th scope="row">Wykluczone elementy HTML</th>
+                        <th scope="row">Wykluczone fragmenty URL</th>
                         <td>
                             <input type="text" name="pdf_metryczka_options[excluded_pages]" class="large-text" value="<?php echo esc_attr($options['excluded_pages'] ?? ''); ?>" />
-                            <p class="description">Przykład: `https://bip.polsl.pl/zamowienia-publiczne`, albo `/zamowienia-publiczne` im bardziej szczegółowo opisane tym lepiej</p>
+                            <p class="description">Przykład: zamowienia-publiczne/dokumenty-i-informacje/, https://bip.polsl.pl/wazne-dokumenty/ (fragmenty adresów URL, lub w całości)</p>
                         </td>
                     </tr>
                     <tr valign="top">
@@ -281,8 +281,8 @@ function pdf_metryczka_settings_page()
                     return $b_count - $a_count;
                 });
 
-                // Ogranicz do 5 najczęściej pobieranych
-                $top_downloads = array_slice($pdf_attachments, 0, 5);
+                // Ogranicz do 10 najczęściej pobieranych
+                $top_downloads = array_slice($pdf_attachments, 0, 10);
                 ?>
                 <p>Liczba zindeksowanych plików: <strong><?php echo intval($count); ?></strong></p>
 
