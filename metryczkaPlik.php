@@ -40,6 +40,7 @@ function check_pdf_links()
         $modal_css = isset($options['modal_css']) ? $options['modal_css'] : '';
         $table_css = isset($options['table_css']) ? $options['table_css'] : '';
         $display_icon = isset($options['display_icon']) ? $options['display_icon'] : 1;
+        $excluded_pages = isset($options['excluded_pages']) ? $options['excluded_pages'] : '';
         $excluded_elements = isset($options['excluded_elements']) ? $options['excluded_elements'] : '';
         $excluded_classes = isset($options['excluded_classes']) ? $options['excluded_classes'] : '';
         $url_prefix = isset($options['url_prefix']) ? $options['url_prefix'] : esc_html((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST']);
@@ -75,10 +76,15 @@ function check_pdf_links()
             }
 
             var normalizedUrlPrefix = normalizePrefix(urlPrefix);
+
+            var excludedPages =
+                <?php
+                echo json_encode(array_filter(array_map('trim', explode(',', $excluded_pages))));
+                ?>;
+
             var excludedElements =
                 <?php
-                $elements = array_filter(array_map('trim', explode(',', $excluded_elements)));
-                echo json_encode($elements);
+                echo json_encode(array_filter(array_map('trim', explode(',', $excluded_elements))));
                 ?>;
 
             var excludedClasses =
@@ -243,244 +249,142 @@ function check_pdf_links()
                 // Zmień sposób wybierania linków PDF
                 const allLinks = document.querySelectorAll('a');
                 const pdfLinks = Array.from(allLinks).filter(isFileLink);
+                //najpierw sprawdzenie, czy strona nie została wykluczona
+                var wykluczonaStrona = false;
+                var currentUrl = window.location.href;
+                var normalizedCurrentUrl = normalizePrefix(currentUrl);
+                excludedPages.forEach(function(excludedPage) {
+                    // Normalizuj wykluczoną stronę
+                    var normalizedExcludedPage = normalizePrefix(excludedPage);
 
-                pdfLinks.forEach(link => {
-
-                    // Sprawdź czy link jest w wykluczonym elemencie
-                    let isExcluded = false;
-                    let isInDocumentDownload = false;
-
-                    // Sprawdź czy link jest w elemencie o klasie mn-document-download
-                    if ($(link).closest('.mn-document-download').length > 0) {
-                        isInDocumentDownload = true;
-                        // Nie wykluczamy, tylko obsługujemy specjalnie
+                    // Sprawdź czy wykluczona ścieżka w całości zawiera się w adresie
+                    if (normalizedCurrentUrl.includes(normalizedExcludedPage)) {
+                        wykluczonaStrona = true;
+                        if (debugMode) {
+                            console.log('Strona wykluczona: ', excludedPage, 'w URL:', currentUrl);
+                        }
                     }
+                });
+                //console.log('Czy strona wykluczona: ', wykluczonaStrona);
+                if (wykluczonaStrona == false) {
+                    pdfLinks.forEach(link => {
 
-                    // Sprawdź wykluczenia z opcji
-                    if (!isInDocumentDownload && !isExcluded) {
-                        // Sprawdź czy link jest w header lub footer
-                        const $link = $(link);
+                        // Sprawdź czy link jest w wykluczonym elemencie
+                        let isExcluded = false;
+                        let isInDocumentDownload = false;
 
-                        // Sprawdź wykluczenia elementów
-                        if (!isExcluded && excludedElements && excludedElements.length > 0) {
-                            for (let i = 0; i < excludedElements.length; i++) {
-                                const element = excludedElements[i].trim();
-                                if (element && $link.parents(element).length > 0) {
-                                    isExcluded = true;
-                                    break;
-                                }
-                            }
+                        // Sprawdź czy link jest w elemencie o klasie mn-document-download
+                        if ($(link).closest('.mn-document-download').length > 0) {
+                            isInDocumentDownload = true;
+                            // Nie wykluczamy, tylko obsługujemy specjalnie
                         }
 
-                        // Sprawdź wykluczenia klas
-                        if (!isExcluded && excludedClasses && excludedClasses.length > 0) {
-                            for (let i = 0; i < excludedClasses.length; i++) {
-                                const className = excludedClasses[i].trim();
-                                if (className) {
-                                    // Sprawdź czy link ma wykluczoną klasę lub znajduje się w elemencie z wykluczoną klasą
-                                    if ($link.hasClass(className) || $link.parents('.' + className).length > 0) {
+                        // Sprawdź wykluczenia z opcji
+                        if (!isInDocumentDownload && !isExcluded) {
+                            // Sprawdź czy link jest w header lub footer
+                            const $link = $(link);
+
+                            // Sprawdź wykluczenia elementów
+                            if (!isExcluded && excludedElements && excludedElements.length > 0) {
+                                for (let i = 0; i < excludedElements.length; i++) {
+                                    const element = excludedElements[i].trim();
+                                    if (element && $link.parents(element).length > 0) {
                                         isExcluded = true;
                                         break;
                                     }
                                 }
                             }
-                        }
-                    }
 
-                    // Obsługa elementów mn-document-download
-                    if (isInDocumentDownload) {
-                        const $downloadContainer = $(link).closest('.mn-document-download');
-                        const documentUrl = link.getAttribute('href');
-                        const documentName = $downloadContainer.find('.mn-document-name').text().trim();
-
-                        // Pobierz URL bazowy strony
-                        const baseUrl = window.location.origin;
-
-                        // Normalizuj URL
-                        let normalizedUrl = documentUrl;
-                        if (!normalizedUrl.startsWith('/') && !normalizedUrl.startsWith('http')) {
-                            normalizedUrl = '/' + normalizedUrl;
-                        }
-
-                        // Pełny URL do wykorzystania w AJAX
-                        let fullUrl = normalizedUrl;
-                        if (normalizedUrl.startsWith('/')) {
-                            fullUrl = baseUrl + normalizedUrl;
-                        }
-
-                        // Zawsze traktuj linki w mn-document-download jako pliki
-                        let isFile = true;
-
-                        // Dodaj przycisk "Metryczka" przed linkiem "Pobierz"
-                        const metrykaButton = document.createElement('a');
-                        metrykaButton.href = 'javascript:void(0)';
-                        metrykaButton.className = 'mn-document-metryczka';
-                        metrykaButton.textContent = 'Metryczka';
-
-                        // Wstaw przycisk przed linkiem "Pobierz"
-                        link.parentNode.insertBefore(metrykaButton, link);
-
-                        // Stwórz ukryty kontener na tabelę z metadanymi
-                        const metadataContainer = document.createElement('div');
-                        metadataContainer.className = 'pdf-metadata-container';
-                        metadataContainer.style.display = 'none';
-
-                        // Dodaj kontener na końcu .mn-document-download
-                        $downloadContainer.append(metadataContainer);
-
-                        // Funkcja do płynnego pokazywania/ukrywania tabelki z użyciem jQuery
-                        function toggleMetadataContainer($container, show) {
-                            if (show) {
-                                $container.css({
-                                    display: 'block',
-                                    overflow: 'hidden',
-                                    maxHeight: '0',
-                                    opacity: '0',
-                                    paddingTop: '0',
-                                    paddingBottom: '0',
-                                    borderWidth: '1px'
-                                }).animate({
-                                    maxHeight: '100%',
-                                    opacity: 1,
-                                    paddingTop: '10px',
-                                    paddingBottom: '10px'
-                                }, 0, 'swing', function() {
-                                    // Callback po zakończeniu animacji
-                                    $container.css('overflow', 'visible');
-                                });
-                            } else {
-                                $container.css('overflow', 'hidden').animate({
-                                    maxHeight: '0',
-                                    opacity: 0,
-                                    paddingTop: '0',
-                                    paddingBottom: '0'
-                                }, 0, 'swing', function() {
-                                    // Callback po zakończeniu animacji
-                                    $container.css('display', 'none');
-                                });
+                            // Sprawdź wykluczenia klas
+                            if (!isExcluded && excludedClasses && excludedClasses.length > 0) {
+                                for (let i = 0; i < excludedClasses.length; i++) {
+                                    const className = excludedClasses[i].trim();
+                                    if (className) {
+                                        // Sprawdź czy link ma wykluczoną klasę lub znajduje się w elemencie z wykluczoną klasą
+                                        if ($link.hasClass(className) || $link.parents('.' + className).length > 0) {
+                                            isExcluded = true;
+                                            break;
+                                        }
+                                    }
+                                }
                             }
                         }
 
-                        // Dodaj obsługę kliknięcia przycisku "Metryczka"
-                        metrykaButton.addEventListener('click', function() {
-                            const $metadataContainer = $(metadataContainer);
+                        // Obsługa elementów mn-document-download
+                        if (isInDocumentDownload) {
+                            const $downloadContainer = $(link).closest('.mn-document-download');
+                            const documentUrl = link.getAttribute('href');
+                            const documentName = $downloadContainer.find('.mn-document-name').text().trim();
 
-                            // Zabezpieczenie przed wielokrotnym kliknięciem
-                            if (metadataContainer.dataset.loading === 'true') {
-                                return;
+                            // Pobierz URL bazowy strony
+                            const baseUrl = window.location.origin;
+
+                            // Normalizuj URL
+                            let normalizedUrl = documentUrl;
+                            if (!normalizedUrl.startsWith('/') && !normalizedUrl.startsWith('http')) {
+                                normalizedUrl = '/' + normalizedUrl;
                             }
 
-                            // Jeśli już zweryfikowane i załadowane - tylko toggle
-                            if (metadataContainer.dataset.verified === 'true') {
-                                toggleMetadataContainer($metadataContainer, metadataContainer.style.display !== 'block');
-                                return;
+                            // Pełny URL do wykorzystania w AJAX
+                            let fullUrl = normalizedUrl;
+                            if (normalizedUrl.startsWith('/')) {
+                                fullUrl = baseUrl + normalizedUrl;
                             }
 
-                            // Pierwsze kliknięcie - sprawdź i załaduj
-                            metadataContainer.dataset.loading = 'true';
-                            metadataContainer.innerHTML = '<div class="loading">Ładowanie metadanych...</div>';
-                            toggleMetadataContainer($metadataContainer, true);
+                            // Zawsze traktuj linki w mn-document-download jako pliki
+                            let isFile = true;
 
-                            // Pobierz metadane przez AJAX
-                            $.post(ajaxurl, {
-                                action: 'get_pdf_data',
-                                url: fullUrl,
-                                title: documentName,
-                                is_document_download: 'true'
-                            }, function(data) {
-                                metadataContainer.dataset.loading = 'false';
-
-                                if (!data || !data.attachment_id) {
-                                    // Nie jest plikiem WordPress
-                                    metadataContainer.innerHTML = '<div class="error">Ten link nie prowadzi do pliku w systemie.</div>';
-                                    setTimeout(function() {
-                                        metrykaButton.style.display = 'none';
-                                        toggleMetadataContainer($metadataContainer, false);
-                                        setTimeout(() => metadataContainer.remove(), 300);
-                                    }, 2000);
-                                    return;
-                                }
-
-                                // Jest plikiem - pokaż metryczki
-                                let metadataHTML = `
-                                    <table class="mn-metadata-table">`;
-                                if (data.autor && data.data_wytworzenia) {
-                                    metadataHTML += `
-                                        <tr>
-                                            <td>Wytworzył:</td>
-                                            <td>${data.autor}</td>
-                                            <td>Data wytworzenia:</td>
-                                            <td>${formatDateDMY(data.data_wytworzenia)}</td>
-                                        </tr>`;
-                                }
-                                metadataHTML += `
-                                    <tr>
-                                        <td>Opublikowano przez:</td>
-                                        <td>${data.publikator}</td>
-                                        <td>Data publikacji:</td>
-                                        <td>${formatDateDMYHM(data.data_publikacji)}</td>
-                                    </tr>`;
-                                if (data.zaktualizowal && data.data_aktualizacji) {
-                                    metadataHTML += `
-                                        <tr>
-                                            <td>Zaktualizował:</td>
-                                            <td>${data.zaktualizowal}</td>
-                                            <td>Data aktualizacji:</td>
-                                            <td>${formatDateDMYHM(data.data_aktualizacji)}</td>
-                                        </tr>`;
-                                }
-                                metadataHTML += `
-                                    <tr>
-                                        <td>Liczba pobrań:</td>
-                                        <td colspan="3">${data.liczba_pobran || '0'}</td>
-                                    </tr>
-                                </table>`;
-
-                                metadataContainer.innerHTML = metadataHTML;
-                                metadataContainer.dataset.verified = 'true';
-
-                            }).fail(function(jqXHR, textStatus, errorThrown) {
-                                metadataContainer.dataset.loading = 'false';
-                                metadataContainer.innerHTML = '<div class="error">Błąd podczas pobierania metadanych</div>';
-                            });
-                        });
-
-                        // Dodaj obsługę kliknięcia linku "Pobierz"
-                        link.addEventListener('click', function(e) {
-                            incrementDownloads(link.href);
-                        });
-
-                    } else if (!isExcluded) {
-                        // Sprawdź rozmiar kontenera
-                        const parentWidth = $(link).parent().width();
-
-                        if (parentWidth >= 400) {
-                            const container = document.createElement('div');
-                            container.className = 'pdf-container';
-
-                            // Skopiuj treść oryginalnego linku
-                            const linkClone = document.createElement('a');
-                            linkClone.href = link.href;
-                            linkClone.innerHTML = link.innerHTML;
-                            linkClone.target = '_blank';
-                            linkClone.className = 'pdf-link-text';
-
-                            // Dodaj przycisk metryczki
+                            // Dodaj przycisk "Metryczka" przed linkiem "Pobierz"
                             const metrykaButton = document.createElement('a');
                             metrykaButton.href = 'javascript:void(0)';
-                            metrykaButton.className = 'pdf-metryczka-button';
-                            metrykaButton.innerHTML = '<i class="fa-solid fa-info-circle" title="Metryczka"></i>';
-                            container.appendChild(linkClone);
-                            container.appendChild(metrykaButton);
+                            metrykaButton.className = 'mn-document-metryczka';
+                            metrykaButton.textContent = 'Metryczka';
+
+                            // Wstaw przycisk przed linkiem "Pobierz"
+                            link.parentNode.insertBefore(metrykaButton, link);
+
+                            // Stwórz ukryty kontener na tabelę z metadanymi
                             const metadataContainer = document.createElement('div');
                             metadataContainer.className = 'pdf-metadata-container';
                             metadataContainer.style.display = 'none';
 
-                            // Dodaj kontener metadanych do głównego kontenera
-                            container.appendChild(metadataContainer);
-                            link.parentNode.replaceChild(container, link);
+                            // Dodaj kontener na końcu .mn-document-download
+                            $downloadContainer.append(metadataContainer);
 
-                            // Obsługa kliknięcia przycisku metryczki
+                            // Funkcja do płynnego pokazywania/ukrywania tabelki z użyciem jQuery
+                            function toggleMetadataContainer($container, show) {
+                                if (show) {
+                                    $container.css({
+                                        display: 'block',
+                                        overflow: 'hidden',
+                                        maxHeight: '0',
+                                        opacity: '0',
+                                        paddingTop: '0',
+                                        paddingBottom: '0',
+                                        borderWidth: '1px'
+                                    }).animate({
+                                        maxHeight: '100%',
+                                        opacity: 1,
+                                        paddingTop: '10px',
+                                        paddingBottom: '10px'
+                                    }, 0, 'swing', function() {
+                                        // Callback po zakończeniu animacji
+                                        $container.css('overflow', 'visible');
+                                    });
+                                } else {
+                                    $container.css('overflow', 'hidden').animate({
+                                        maxHeight: '0',
+                                        opacity: 0,
+                                        paddingTop: '0',
+                                        paddingBottom: '0'
+                                    }, 0, 'swing', function() {
+                                        // Callback po zakończeniu animacji
+                                        $container.css('display', 'none');
+                                    });
+                                }
+                            }
+
+                            // Dodaj obsługę kliknięcia przycisku "Metryczka"
                             metrykaButton.addEventListener('click', function() {
                                 const $metadataContainer = $(metadataContainer);
 
@@ -491,264 +395,384 @@ function check_pdf_links()
 
                                 // Jeśli już zweryfikowane i załadowane - tylko toggle
                                 if (metadataContainer.dataset.verified === 'true') {
-                                    if (metadataContainer.style.display === 'block') {
-                                        metadataContainer.style.display = 'none';
-                                    } else {
-                                        metadataContainer.style.display = 'block';
-                                    }
+                                    toggleMetadataContainer($metadataContainer, metadataContainer.style.display !== 'block');
                                     return;
                                 }
 
                                 // Pierwsze kliknięcie - sprawdź i załaduj
                                 metadataContainer.dataset.loading = 'true';
-                                metadataContainer.style.display = 'block';
                                 metadataContainer.innerHTML = '<div class="loading">Ładowanie metadanych...</div>';
+                                toggleMetadataContainer($metadataContainer, true);
 
-                                // Pobierz metadane i zweryfikuj czy to plik
+                                // Pobierz metadane przez AJAX
                                 $.post(ajaxurl, {
                                     action: 'get_pdf_data',
-                                    url: linkClone.href,
-                                    title: linkClone.textContent.trim()
+                                    url: fullUrl,
+                                    title: documentName,
+                                    is_document_download: 'true'
                                 }, function(data) {
                                     metadataContainer.dataset.loading = 'false';
 
                                     if (!data || !data.attachment_id) {
-                                        // Nie jest plikiem WordPress - ukryj przycisk
+                                        // Nie jest plikiem WordPress
                                         metadataContainer.innerHTML = '<div class="error">Ten link nie prowadzi do pliku w systemie.</div>';
-                                        metrykaButton.style.pointerEvents = 'none';
                                         setTimeout(function() {
                                             metrykaButton.style.display = 'none';
-                                            metadataContainer.remove();
+                                            toggleMetadataContainer($metadataContainer, false);
+                                            setTimeout(() => metadataContainer.remove(), 300);
                                         }, 2000);
                                         return;
                                     }
 
                                     // Jest plikiem - pokaż metryczki
                                     let metadataHTML = `
-                                        <table class="mn-metadata-table">`;
+                                    <table class="mn-metadata-table">`;
                                     if (data.autor && data.data_wytworzenia) {
                                         metadataHTML += `
+                                        <tr>
+                                            <td>Wytworzył:</td>
+                                            <td>${data.autor}</td>
+                                            <td>Data wytworzenia:</td>
+                                            <td>${formatDateDMY(data.data_wytworzenia)}</td>
+                                        </tr>`;
+                                    }
+                                    metadataHTML += `
+                                    <tr>
+                                        <td>Opublikowano przez:</td>
+                                        <td>${data.publikator}</td>
+                                        <td>Data publikacji:</td>
+                                        <td>${formatDateDMYHM(data.data_publikacji)}</td>
+                                    </tr>`;
+                                    if (data.zaktualizowal && data.data_aktualizacji) {
+                                        metadataHTML += `
+                                        <tr>
+                                            <td>Zaktualizował:</td>
+                                            <td>${data.zaktualizowal}</td>
+                                            <td>Data aktualizacji:</td>
+                                            <td>${formatDateDMYHM(data.data_aktualizacji)}</td>
+                                        </tr>`;
+                                    }
+                                    metadataHTML += `
+                                    <tr>
+                                        <td>Liczba pobrań:</td>
+                                        <td colspan="3">${data.liczba_pobran || '0'}</td>
+                                    </tr>
+                                </table>`;
+
+                                    metadataContainer.innerHTML = metadataHTML;
+                                    metadataContainer.dataset.verified = 'true';
+
+                                }).fail(function(jqXHR, textStatus, errorThrown) {
+                                    metadataContainer.dataset.loading = 'false';
+                                    metadataContainer.innerHTML = '<div class="error">Błąd podczas pobierania metadanych</div>';
+                                });
+                            });
+
+                            // Dodaj obsługę kliknięcia linku "Pobierz"
+                            link.addEventListener('click', function(e) {
+                                incrementDownloads(link.href);
+                            });
+
+                        } else if (!isExcluded) {
+                            // Sprawdź rozmiar kontenera
+                            const parentWidth = $(link).parent().width();
+
+                            if (parentWidth >= 400) {
+                                const container = document.createElement('div');
+                                container.className = 'pdf-container';
+
+                                // Skopiuj treść oryginalnego linku
+                                const linkClone = document.createElement('a');
+                                linkClone.href = link.href;
+                                linkClone.innerHTML = link.innerHTML;
+                                linkClone.target = '_blank';
+                                linkClone.className = 'pdf-link-text';
+
+                                // Dodaj przycisk metryczki
+                                const metrykaButton = document.createElement('a');
+                                metrykaButton.href = 'javascript:void(0)';
+                                metrykaButton.className = 'pdf-metryczka-button';
+                                metrykaButton.innerHTML = '<i class="fa-solid fa-info-circle" title="Metryczka"></i>';
+                                container.appendChild(linkClone);
+                                container.appendChild(metrykaButton);
+                                const metadataContainer = document.createElement('div');
+                                metadataContainer.className = 'pdf-metadata-container';
+                                metadataContainer.style.display = 'none';
+
+                                // Dodaj kontener metadanych do głównego kontenera
+                                container.appendChild(metadataContainer);
+                                link.parentNode.replaceChild(container, link);
+
+                                // Obsługa kliknięcia przycisku metryczki
+                                metrykaButton.addEventListener('click', function() {
+                                    const $metadataContainer = $(metadataContainer);
+
+                                    // Zabezpieczenie przed wielokrotnym kliknięciem
+                                    if (metadataContainer.dataset.loading === 'true') {
+                                        return;
+                                    }
+
+                                    // Jeśli już zweryfikowane i załadowane - tylko toggle
+                                    if (metadataContainer.dataset.verified === 'true') {
+                                        if (metadataContainer.style.display === 'block') {
+                                            metadataContainer.style.display = 'none';
+                                        } else {
+                                            metadataContainer.style.display = 'block';
+                                        }
+                                        return;
+                                    }
+
+                                    // Pierwsze kliknięcie - sprawdź i załaduj
+                                    metadataContainer.dataset.loading = 'true';
+                                    metadataContainer.style.display = 'block';
+                                    metadataContainer.innerHTML = '<div class="loading">Ładowanie metadanych...</div>';
+
+                                    // Pobierz metadane i zweryfikuj czy to plik
+                                    $.post(ajaxurl, {
+                                        action: 'get_pdf_data',
+                                        url: linkClone.href,
+                                        title: linkClone.textContent.trim()
+                                    }, function(data) {
+                                        metadataContainer.dataset.loading = 'false';
+
+                                        if (!data || !data.attachment_id) {
+                                            // Nie jest plikiem WordPress - ukryj przycisk
+                                            metadataContainer.innerHTML = '<div class="error">Ten link nie prowadzi do pliku w systemie.</div>';
+                                            metrykaButton.style.pointerEvents = 'none';
+                                            setTimeout(function() {
+                                                metrykaButton.style.display = 'none';
+                                                metadataContainer.remove();
+                                            }, 2000);
+                                            return;
+                                        }
+
+                                        // Jest plikiem - pokaż metryczki
+                                        let metadataHTML = `
+                                        <table class="mn-metadata-table">`;
+                                        if (data.autor && data.data_wytworzenia) {
+                                            metadataHTML += `
                                             <tr>
                                                 <td>Wytworzył:</td>
                                                 <td>${data.autor}</td>
                                                 <td>Data wytworzenia:</td>
                                                 <td>${formatDateDMY(data.data_wytworzenia)}</td>
                                             </tr>`;
-                                    }
-                                    metadataHTML += `
+                                        }
+                                        metadataHTML += `
                                         <tr>
                                             <td>Opublikowano przez:</td>
                                             <td>${data.publikator}</td>
                                             <td>Data publikacji:</td>
                                             <td>${formatDateDMYHM(data.data_publikacji)}</td>
                                         </tr>`;
-                                    if (data.zaktualizowal && data.data_aktualizacji) {
-                                        metadataHTML += `
+                                        if (data.zaktualizowal && data.data_aktualizacji) {
+                                            metadataHTML += `
                                             <tr>
                                                 <td>Zaktualizował:</td>
                                                 <td>${data.zaktualizowal}</td>
                                                 <td>Data aktualizacji:</td>
                                                 <td>${formatDateDMYHM(data.data_aktualizacji)}</td>
                                             </tr>`;
-                                    }
-                                    metadataHTML += `
+                                        }
+                                        metadataHTML += `
                                             <tr>
                                                 <td>Liczba pobrań:</td>
                                                 <td colspan="3">${data.liczba_pobran || '0'}</td>
                                             </tr>
                                         </table>`;
 
-                                    metadataContainer.innerHTML = metadataHTML;
-                                    metadataContainer.dataset.verified = 'true';
+                                        metadataContainer.innerHTML = metadataHTML;
+                                        metadataContainer.dataset.verified = 'true';
 
-                                }).fail(function() {
-                                    metadataContainer.dataset.loading = 'false';
-                                    metadataContainer.innerHTML = '<div class="error">Błąd podczas pobierania metadanych</div>';
-                                    metrykaButton.style.pointerEvents = 'none';
-                                    setTimeout(function() {
-                                        metrykaButton.style.display = 'none';
-                                        metadataContainer.remove();
-                                    }, 2000);
+                                    }).fail(function() {
+                                        metadataContainer.dataset.loading = 'false';
+                                        metadataContainer.innerHTML = '<div class="error">Błąd podczas pobierania metadanych</div>';
+                                        metrykaButton.style.pointerEvents = 'none';
+                                        setTimeout(function() {
+                                            metrykaButton.style.display = 'none';
+                                            metadataContainer.remove();
+                                        }, 2000);
+                                    });
                                 });
-                            });
 
-                            // Obsługa kliknięcia linku
-                            linkClone.addEventListener('click', function(e) {
-                                incrementDownloads(linkClone.href);
-                            });
+                                // Obsługa kliknięcia linku
+                                linkClone.addEventListener('click', function(e) {
+                                    incrementDownloads(linkClone.href);
+                                });
 
-                        } else if (parentWidth >= 300) {
-                            // Szerokość 300-400px: Ikona obok (z modalem)
-                            const container = document.createElement('div');
-                            container.className = 'pdf-container';
+                            } else if (parentWidth >= 300) {
+                                // Szerokość 300-400px: Ikona obok (z modalem)
+                                const container = document.createElement('div');
+                                container.className = 'pdf-container';
 
-                            // Skopiuj treść oryginalnego linku
-                            const linkClone = document.createElement('a');
-                            linkClone.href = link.href;
-                            linkClone.innerHTML = link.innerHTML;
-                            linkClone.target = '_blank';
-                            linkClone.className = 'pdf-link-text';
+                                // Skopiuj treść oryginalnego linku
+                                const linkClone = document.createElement('a');
+                                linkClone.href = link.href;
+                                linkClone.innerHTML = link.innerHTML;
+                                linkClone.target = '_blank';
+                                linkClone.className = 'pdf-link-text';
 
-                            // Dodaj ikonę metryczki (z modalem)
-                            const iconSpan = document.createElement('span');
-                            iconSpan.className = 'pdf-icon-container';
-                            iconSpan.innerHTML = '<i class="fa-solid fa-info-circle" title="Metryczka"></i>';
-                            iconSpan.dataset.url = link.href;
-                            iconSpan.dataset.title = link.textContent.trim();
+                                // Dodaj ikonę metryczki (z modalem)
+                                const iconSpan = document.createElement('span');
+                                iconSpan.className = 'pdf-icon-container';
+                                iconSpan.innerHTML = '<i class="fa-solid fa-info-circle" title="Metryczka"></i>';
+                                iconSpan.dataset.url = link.href;
+                                iconSpan.dataset.title = link.textContent.trim();
 
-                            // Dodaj elementy do kontenera
-                            container.appendChild(linkClone);
-                            container.appendChild(iconSpan);
+                                // Dodaj elementy do kontenera
+                                container.appendChild(linkClone);
+                                container.appendChild(iconSpan);
 
-                            // Zastąp oryginalny link nowym kontenerem
-                            link.parentNode.replaceChild(container, link);
+                                // Zastąp oryginalny link nowym kontenerem
+                                link.parentNode.replaceChild(container, link);
 
-                            // Obsługa kliknięcia ikony
-                            iconSpan.addEventListener('click', function(e) {
-                                e.stopPropagation();
+                                // Obsługa kliknięcia ikony
+                                iconSpan.addEventListener('click', function(e) {
+                                    e.stopPropagation();
 
-                                // Zabezpieczenie przed wielokrotnym kliknięciem
-                                if (this.dataset.loading === 'true') {
-                                    return;
-                                }
-
-                                const url = this.dataset.url;
-                                const title = this.dataset.title;
-
-                                // Sprawdź czy dane są już załadowane
-                                if (this.dataset.verified === 'true' && this.dataset.cachedData) {
-                                    const data = JSON.parse(this.dataset.cachedData);
-                                    displayModalWithData(url, title, data);
-                                    return;
-                                }
-
-                                this.dataset.loading = 'true';
-                                $('#pdfDetails').html('<div class="loading">Ładowanie metadanych...</div>');
-                                $('#pdfTitle').html(title);
-
-                                const self = this;
-                                $.post(ajaxurl, {
-                                    action: 'get_pdf_data',
-                                    url: url,
-                                    title: title
-                                }, function(data) {
-                                    self.dataset.loading = 'false';
-
-                                    if (!data || !data.attachment_id) {
-                                        $('#pdfModal').modal('hide');
-                                        iconSpan.style.display = 'none';
+                                    // Zabezpieczenie przed wielokrotnym kliknięciem
+                                    if (this.dataset.loading === 'true') {
                                         return;
                                     }
 
-                                    // Zapisz dane do cache
-                                    self.dataset.verified = 'true';
-                                    self.dataset.cachedData = JSON.stringify(data);
+                                    const url = this.dataset.url;
+                                    const title = this.dataset.title;
 
-                                    displayModalWithData(url, title, data);
-                                }).fail(function() {
-                                    self.dataset.loading = 'false';
-                                    $('#pdfModal').modal('hide');
-                                    iconSpan.style.display = 'none';
-                                });
-                            });
-                            // Obsługa kliknięcia linku
-                            linkClone.addEventListener('click', function(e) {
-                                incrementDownloads(linkClone.href);
-                            });
-
-                        } else {
-                            // Szerokość < 300px: Ikona pod linkiem (z modalem)
-                            const container = document.createElement('div');
-                            container.className = 'pdf-container';
-                            container.style.flexDirection = 'column !important';
-
-                            // Skopiuj treść oryginalnego linku
-                            const linkClone = document.createElement('a');
-                            linkClone.href = link.href;
-                            linkClone.innerHTML = link.innerHTML;
-                            linkClone.target = '_blank';
-                            linkClone.className = 'pdf-link-text';
-                            linkClone.style.marginBottom = '5px';
-
-                            // Dodaj ikonę metryczki (z modalem)
-                            const iconSpan = document.createElement('span');
-                            iconSpan.className = 'pdf-icon-container pdf-icon-container-pod';
-                            iconSpan.innerHTML = '<i class="fa-solid fa-info-circle" title="Metryczka"></i>';
-                            iconSpan.dataset.url = link.href;
-                            iconSpan.dataset.title = link.textContent.trim();
-                            container.appendChild(linkClone);
-                            container.appendChild(iconSpan);
-                            link.parentNode.replaceChild(container, link);
-
-                            // Obsługa kliknięcia ikony
-                            iconSpan.addEventListener('click', function(e) {
-                                e.stopPropagation();
-
-                                // Zabezpieczenie przed wielokrotnym kliknięciem
-                                if (this.dataset.loading === 'true') {
-                                    return;
-                                }
-
-                                const url = this.dataset.url;
-                                const title = this.dataset.title;
-
-                                // Sprawdź czy dane są już załadowane
-                                if (this.dataset.verified === 'true' && this.dataset.cachedData) {
-                                    const data = JSON.parse(this.dataset.cachedData);
-                                    displayModalWithData(url, title, data);
-                                    return;
-                                }
-
-                                this.dataset.loading = 'true';
-                                $('#pdfDetails').html('<div class="loading">Ładowanie metadanych...</div>');
-                                $('#pdfTitle').html(title);
-
-                                const self = this;
-                                $.post(ajaxurl, {
-                                    action: 'get_pdf_data',
-                                    url: url,
-                                    title: title
-                                }, function(data) {
-                                    self.dataset.loading = 'false';
-
-                                    if (!data || !data.attachment_id) {
-                                        $('#pdfModal').modal('hide');
-                                        iconSpan.style.display = 'none';
+                                    // Sprawdź czy dane są już załadowane
+                                    if (this.dataset.verified === 'true' && this.dataset.cachedData) {
+                                        const data = JSON.parse(this.dataset.cachedData);
+                                        displayModalWithData(url, title, data);
                                         return;
                                     }
 
-                                    // Zapisz dane do cache
-                                    self.dataset.verified = 'true';
-                                    self.dataset.cachedData = JSON.stringify(data);
+                                    this.dataset.loading = 'true';
+                                    $('#pdfDetails').html('<div class="loading">Ładowanie metadanych...</div>');
+                                    $('#pdfTitle').html(title);
 
-                                    displayModalWithData(url, title, data);
-                                }).fail(function() {
-                                    self.dataset.loading = 'false';
-                                    $('#pdfModal').modal('hide');
-                                    iconSpan.style.display = 'none';
+                                    const self = this;
+                                    $.post(ajaxurl, {
+                                        action: 'get_pdf_data',
+                                        url: url,
+                                        title: title
+                                    }, function(data) {
+                                        self.dataset.loading = 'false';
+
+                                        if (!data || !data.attachment_id) {
+                                            $('#pdfModal').modal('hide');
+                                            iconSpan.style.display = 'none';
+                                            return;
+                                        }
+
+                                        // Zapisz dane do cache
+                                        self.dataset.verified = 'true';
+                                        self.dataset.cachedData = JSON.stringify(data);
+
+                                        displayModalWithData(url, title, data);
+                                    }).fail(function() {
+                                        self.dataset.loading = 'false';
+                                        $('#pdfModal').modal('hide');
+                                        iconSpan.style.display = 'none';
+                                    });
                                 });
-                            });
+                                // Obsługa kliknięcia linku
+                                linkClone.addEventListener('click', function(e) {
+                                    incrementDownloads(linkClone.href);
+                                });
 
-                            // Obsługa kliknięcia linku
-                            linkClone.addEventListener('click', function(e) {
-                                incrementDownloads(linkClone.href);
-                            });
+                            } else {
+                                // Szerokość < 300px: Ikona pod linkiem (z modalem)
+                                const container = document.createElement('div');
+                                container.className = 'pdf-container';
+                                container.style.flexDirection = 'column !important';
+
+                                // Skopiuj treść oryginalnego linku
+                                const linkClone = document.createElement('a');
+                                linkClone.href = link.href;
+                                linkClone.innerHTML = link.innerHTML;
+                                linkClone.target = '_blank';
+                                linkClone.className = 'pdf-link-text';
+                                linkClone.style.marginBottom = '5px';
+
+                                // Dodaj ikonę metryczki (z modalem)
+                                const iconSpan = document.createElement('span');
+                                iconSpan.className = 'pdf-icon-container pdf-icon-container-pod';
+                                iconSpan.innerHTML = '<i class="fa-solid fa-info-circle" title="Metryczka"></i>';
+                                iconSpan.dataset.url = link.href;
+                                iconSpan.dataset.title = link.textContent.trim();
+                                container.appendChild(linkClone);
+                                container.appendChild(iconSpan);
+                                link.parentNode.replaceChild(container, link);
+
+                                // Obsługa kliknięcia ikony
+                                iconSpan.addEventListener('click', function(e) {
+                                    e.stopPropagation();
+
+                                    // Zabezpieczenie przed wielokrotnym kliknięciem
+                                    if (this.dataset.loading === 'true') {
+                                        return;
+                                    }
+
+                                    const url = this.dataset.url;
+                                    const title = this.dataset.title;
+
+                                    // Sprawdź czy dane są już załadowane
+                                    if (this.dataset.verified === 'true' && this.dataset.cachedData) {
+                                        const data = JSON.parse(this.dataset.cachedData);
+                                        displayModalWithData(url, title, data);
+                                        return;
+                                    }
+
+                                    this.dataset.loading = 'true';
+                                    $('#pdfDetails').html('<div class="loading">Ładowanie metadanych...</div>');
+                                    $('#pdfTitle').html(title);
+
+                                    const self = this;
+                                    $.post(ajaxurl, {
+                                        action: 'get_pdf_data',
+                                        url: url,
+                                        title: title
+                                    }, function(data) {
+                                        self.dataset.loading = 'false';
+
+                                        if (!data || !data.attachment_id) {
+                                            $('#pdfModal').modal('hide');
+                                            iconSpan.style.display = 'none';
+                                            return;
+                                        }
+
+                                        // Zapisz dane do cache
+                                        self.dataset.verified = 'true';
+                                        self.dataset.cachedData = JSON.stringify(data);
+
+                                        displayModalWithData(url, title, data);
+                                    }).fail(function() {
+                                        self.dataset.loading = 'false';
+                                        $('#pdfModal').modal('hide');
+                                        iconSpan.style.display = 'none';
+                                    });
+                                });
+
+                                // Obsługa kliknięcia linku
+                                linkClone.addEventListener('click', function(e) {
+                                    incrementDownloads(linkClone.href);
+                                });
+                            }
                         }
-                    }
-                });
+                    });
 
-                // Obsługa kliknięcia na link PDF
-                $(document).on('click', '.pdf-link', function(e) {
-                    if (!$(e.target).hasClass('fa-info-circle')) {
-                        window.open(this.dataset.url, '_blank');
-                        incrementDownloads(this.dataset.url);
-                    }
-                });
+                    // Obsługa kliknięcia na link PDF
+                    $(document).on('click', '.pdf-link', function(e) {
+                        if (!$(e.target).hasClass('fa-info-circle')) {
+                            window.open(this.dataset.url, '_blank');
+                            incrementDownloads(this.dataset.url);
+                        }
+                    });
 
-                // Obsługa zamknięcia modalu
-                $('.close-modal').on('click', function() {
-                    $('#pdfModal').modal('hide');
-                });
+                    // Obsługa zamknięcia modalu
+                    $('.close-modal').on('click', function() {
+                        $('#pdfModal').modal('hide');
+                    });
+                }
             });
         </script>
 

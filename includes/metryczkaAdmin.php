@@ -118,6 +118,13 @@ function pdf_metryczka_settings_page()
                     <tr valign="top">
                         <th scope="row">Wykluczone elementy HTML</th>
                         <td>
+                            <input type="text" name="pdf_metryczka_options[excluded_pages]" class="large-text" value="<?php echo esc_attr($options['excluded_pages'] ?? ''); ?>" />
+                            <p class="description">Przykład: `https://bip.polsl.pl/zamowienia-publiczne`, albo `/zamowienia-publiczne` im bardziej szczegółowo opisane tym lepiej</p>
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row">Wykluczone elementy HTML</th>
+                        <td>
                             <input type="text" name="pdf_metryczka_options[excluded_elements]" class="large-text" value="<?php echo esc_attr($options['excluded_elements'] ?? ''); ?>" />
                             <p class="description">Przykład: div, span, article (elementy HTML)</p>
                         </td>

@@ -59,6 +59,7 @@ function pdf_metryczka_sanitize_options($input)
     $output['button_css'] = wp_strip_all_tags($input['button_css']);
     $output['modal_css'] = wp_strip_all_tags($input['modal_css']);
     $output['table_css'] = wp_strip_all_tags($input['table_css']);
+    $output['excluded_pages'] = sanitize_text_field($input['excluded_pages']);
     $output['excluded_elements'] = sanitize_text_field($input['excluded_elements']);
     $output['excluded_classes'] = sanitize_text_field($input['excluded_classes']);
     $output['url_prefix'] = !empty($input['url_prefix']) ? esc_url_raw($input['url_prefix']) : esc_html((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST']);
