@@ -355,6 +355,7 @@ function check_pdf_links()
                             // Funkcja do płynnego pokazywania/ukrywania tabelki z użyciem jQuery
                             function toggleMetadataContainer($container, show) {
                                 if (show) {
+                                    metrykaButton.ariaLabel = 'Kliknij aby ukryć metryczkę odnośnika';
                                     $container.css({
                                         display: 'block',
                                         overflow: 'hidden',
@@ -373,6 +374,7 @@ function check_pdf_links()
                                         $container.css('overflow', 'visible');
                                     });
                                 } else {
+                                    metrykaButton.ariaLabel = 'Kliknij aby wyświetlić metryczkę odnośnika';
                                     $container.css('overflow', 'hidden').animate({
                                         maxHeight: '0',
                                         opacity: 0,
@@ -519,8 +521,10 @@ function check_pdf_links()
                                     if (metadataContainer.dataset.verified === 'true') {
                                         if (metadataContainer.style.display === 'block') {
                                             metadataContainer.style.display = 'none';
+                                            metrykaButton.ariaLabel = 'Kliknij aby wyświetlić metryczkę odnośnika';
                                         } else {
                                             metadataContainer.style.display = 'block';
+                                            metrykaButton.ariaLabel = 'Kliknij aby ukryć metryczkę odnośnika';
                                         }
                                         return;
                                     }
