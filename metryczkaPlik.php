@@ -339,6 +339,7 @@ function check_pdf_links()
                             metrykaButton.href = 'javascript:void(0)';
                             metrykaButton.className = 'mn-document-metryczka';
                             metrykaButton.textContent = 'Metryczka';
+                            metrykaButton.ariaLabel = 'Kliknij aby wyświetlić metryczkę odnośnika';
 
                             // Wstaw przycisk przed linkiem "Pobierz"
                             link.parentNode.insertBefore(metrykaButton, link);
@@ -493,6 +494,8 @@ function check_pdf_links()
                                 metrykaButton.href = 'javascript:void(0)';
                                 metrykaButton.className = 'pdf-metryczka-button';
                                 metrykaButton.innerHTML = '<i class="fa-solid fa-info-circle" title="Metryczka"></i>';
+                                metrykaButton.ariaLabel = 'Kliknij aby wyświetlić metryczkę odnośnika';
+
                                 container.appendChild(linkClone);
                                 container.appendChild(metrykaButton);
                                 const metadataContainer = document.createElement('div');
@@ -616,6 +619,7 @@ function check_pdf_links()
                                 const iconSpan = document.createElement('span');
                                 iconSpan.className = 'pdf-icon-container';
                                 iconSpan.innerHTML = '<i class="fa-solid fa-info-circle" title="Metryczka"></i>';
+                                iconSpan.ariaLabel = 'Kliknij aby wyświetlić metryczkę odnośnika';
                                 iconSpan.dataset.url = link.href;
                                 iconSpan.dataset.title = link.textContent.trim();
 
@@ -697,6 +701,7 @@ function check_pdf_links()
                                 const iconSpan = document.createElement('span');
                                 iconSpan.className = 'pdf-icon-container pdf-icon-container-pod';
                                 iconSpan.innerHTML = '<i class="fa-solid fa-info-circle" title="Metryczka"></i>';
+                                iconSpan.ariaLabel = 'Kliknij aby wyświetlić metryczkę odnośnika';
                                 iconSpan.dataset.url = link.href;
                                 iconSpan.dataset.title = link.textContent.trim();
                                 container.appendChild(linkClone);
