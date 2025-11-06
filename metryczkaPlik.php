@@ -874,34 +874,8 @@ function increment_downloads()
     $url = pdf_metryczka_normalize_url($url);
 
     // Znajdź attachment_id na podstawie URL
+    // reszta wykrywań usunięta, plik i tak sprawdzany tylko przez URL
     $attachment_id = attachment_url_to_postid($url);
-    // Jak nie to po nazwie pliku
-    if (!$attachment_id) {
-        $slug = basename(parse_url($url, PHP_URL_PATH));
-        $args = array(
-            'post_type' => 'attachment',
-            'post_mime_type' => 'application/pdf',
-            'post_status' => 'inherit',
-            'posts_per_page' => 1,
-            'meta_query' => array(
-                array(
-                    'key' => '_wp_attached_file',
-                    'value' => $slug,
-                    'compare' => 'LIKE'
-                )
-            )
-        );
-
-        $attachments = get_posts($args);
-
-        if (!empty($attachments)) {
-            $attachment_id = $attachments[0]->ID;
-        } else {
-            wp_send_json_error('Nie znaleziono załącznika');
-            return;
-        }
-    }
-
     $count = intval(get_post_meta($attachment_id, 'pdf_liczba_pobran', true));
     $count++;
     update_post_meta($attachment_id, 'pdf_liczba_pobran', $count);
