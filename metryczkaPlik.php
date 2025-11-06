@@ -92,8 +92,6 @@ function check_pdf_links()
                 echo json_encode(array_filter(array_map('trim', explode(',', $excluded_classes))));
                 ?>;
 
-            var debugMode = <?php echo isset($options['debug_mode']) && $options['debug_mode'] ? 'true' : 'false'; ?>;
-
             // Funkcja pomocnicza do wyświetlania modala z danymi
             function displayModalWithData(url, title, data) {
                 jQuery('#pdfTitle').html(`<a href="${url}" target="_blank" onclick="incrementDownloads('${url}')">${title}</a>`);
@@ -260,12 +258,8 @@ function check_pdf_links()
                     // Sprawdź czy wykluczona ścieżka w całości zawiera się w adresie
                     if (normalizedCurrentUrl.includes(normalizedExcludedPage)) {
                         wykluczonaStrona = true;
-                        if (debugMode) {
-                            console.log('Strona wykluczona: ', excludedPage, 'w URL:', currentUrl);
-                        }
                     }
                 });
-                //console.log('Czy strona wykluczona: ', wykluczonaStrona);
                 if (wykluczonaStrona == false) {
                     pdfLinks.forEach(link => {
 
