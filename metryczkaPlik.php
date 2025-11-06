@@ -252,7 +252,6 @@ function check_pdf_links()
                 var currentUrl = window.location.href;
                 var normalizedCurrentUrl = normalizePrefix(currentUrl);
                 excludedPages.forEach(function(excludedPage) {
-                    // Normalizuj wykluczoną stronę
                     var normalizedExcludedPage = normalizePrefix(excludedPage);
 
                     // Sprawdź czy wykluczona ścieżka w całości zawiera się w adresie
