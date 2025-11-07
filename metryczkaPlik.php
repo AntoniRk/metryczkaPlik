@@ -885,7 +885,7 @@ add_action('wp_ajax_nopriv_increment_downloads', 'increment_downloads');
 // Funkcja do usuwania danych przy odinstalowaniu
 function pdf_metryczka_uninstall()
 {
-    // Usuń tylko opcje wtyczki, zachowaj metadane
+    //wtyczka nie wprowadza na stronie żadnych stałych zmian, więc usuwane są tylko zapisane ustawienia
     delete_option('pdf_metryczka_options');
 }
 register_uninstall_hook(__FILE__, 'pdf_metryczka_uninstall');
