@@ -4,7 +4,6 @@
 function pdf_metryczka_attachment_fields($form_fields, $post)
 {
     // Wytworzył i data wytworzenia
-    // Można dodać do zawnsowanej edycji, ale nie jest to konieczne
     $autor = get_post_meta($post->ID, 'wytworzyl', true);
     $data_wytworzenia = get_post_meta($post->ID, 'data_wytworzenia', true);
 
