@@ -25,6 +25,7 @@ function check_pdf_links()
     if (!$options['enable_auto_detection']) {
         return;
     }
+    // sprawdź czy urządzenie mobilne (domyślnie wyłączone)
     if (wp_is_mobile() && !$options['enable_mobile']) {
         return;
     }
@@ -425,35 +426,35 @@ function check_pdf_links()
                                     <table class="mn-metadata-table">`;
                                     if (data.autor && data.data_wytworzenia) {
                                         metadataHTML += `
-                                        <tr>
-                                            <td>Wytworzył:</td>
-                                            <td>${data.autor}</td>
-                                            <td>Data wytworzenia:</td>
-                                            <td>${formatDateDMY(data.data_wytworzenia)}</td>
-                                        </tr>`;
+                                            <tr>
+                                                <td>Wytworzył:</td>
+                                                <td>${data.autor}</td>
+                                                <td>Data wytworzenia:</td>
+                                                <td>${formatDateDMY(data.data_wytworzenia)}</td>
+                                            </tr>`;
                                     }
                                     metadataHTML += `
-                                    <tr>
-                                        <td>Opublikowano przez:</td>
-                                        <td>${data.publikator}</td>
-                                        <td>Data publikacji:</td>
-                                        <td>${formatDateDMYHM(data.data_publikacji)}</td>
-                                    </tr>`;
+                                        <tr>
+                                            <td>Opublikowano przez:</td>
+                                            <td>${data.publikator}</td>
+                                            <td>Data publikacji:</td>
+                                            <td>${formatDateDMYHM(data.data_publikacji)}</td>
+                                        </tr>`;
                                     if (data.zaktualizowal && data.data_aktualizacji) {
                                         metadataHTML += `
-                                        <tr>
-                                            <td>Zaktualizował:</td>
-                                            <td>${data.zaktualizowal}</td>
-                                            <td>Data aktualizacji:</td>
-                                            <td>${formatDateDMYHM(data.data_aktualizacji)}</td>
-                                        </tr>`;
+                                            <tr>
+                                                <td>Zaktualizował:</td>
+                                                <td>${data.zaktualizowal}</td>
+                                                <td>Data aktualizacji:</td>
+                                                <td>${formatDateDMYHM(data.data_aktualizacji)}</td>
+                                            </tr>`;
                                     }
                                     metadataHTML += `
-                                    <tr>
-                                        <td>Liczba pobrań:</td>
-                                        <td colspan="3">${data.liczba_pobran || '0'}</td>
-                                    </tr>
-                                </table>`;
+                                            <tr>
+                                                <td>Liczba pobrań:</td>
+                                                <td colspan="3">${data.liczba_pobran || '0'}</td>
+                                            </tr>
+                                        </table>`;
 
                                     metadataContainer.innerHTML = metadataHTML;
                                     metadataContainer.dataset.verified = 'true';
