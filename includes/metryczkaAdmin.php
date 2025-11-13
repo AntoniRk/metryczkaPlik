@@ -13,7 +13,7 @@ function pdf_metryczka_menu()
 }
 add_action('admin_menu', 'pdf_metryczka_menu');
 
-function pdf_metryczka_add_help_tab()
+function pdf_metryczka_add_help_tab() //przycisk pomoc z WordPress
 {
     $screen = get_current_screen();
 
