@@ -1,6 +1,6 @@
 <?php
 
-// Aktualizacja funkcji domyślnych opcji
+// Domyślne opcje
 function pdf_metryczka_default_options()
 {
     return array(
