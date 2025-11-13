@@ -36,6 +36,7 @@ function pdf_metryczka_format_display_date($date_str)
     }
 }
 
+//uproszczenie URL, usunięcie '/' jeśli na początku. umożliwia łatwiejsze sprawdzenie URL
 function pdf_metryczka_normalize_url($url)
 {
     if (substr($url, 0, 1) === '/' && substr($url, 0, 2) !== '//') {
@@ -66,6 +67,7 @@ function pdf_metryczka_sanitize_options($input)
     return $output;
 }
 
+//formatowanie daty w JS
 function add_pdf_date_formatting_script()
 {
 ?>
