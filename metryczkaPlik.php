@@ -826,7 +826,6 @@ function get_pdf_data()
         if (!empty($attachments)) {
             $attachment_id = $attachments[0]->ID;
         } else {
-            // NIE ZNALEZIONO - zwróć info że to nie jest plik WP
             wp_send_json(array('attachment_id' => null));
             return;
         }
